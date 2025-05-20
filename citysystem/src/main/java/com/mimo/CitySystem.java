@@ -5,6 +5,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CitySystem extends JavaPlugin implements Listener{
+    public static CitySystem INSTANCE = null;
+
+    public CitySystem() {
+        INSTANCE = this;
+    }
+
     @Override
     public void onEnable() {
         // Plugin startup logic
