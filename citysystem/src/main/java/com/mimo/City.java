@@ -1,42 +1,30 @@
 package com.mimo;
 
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import it.unimi.dsi.fastutil.Hash;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.entity.Player;
 
-import com.mimo.Gui.BasicInventoryGui;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-public class City extends BasicInventoryGui {
-    private final String name;
-    private final String owner;
-    private final Inventory inventory;
+@Getter
+public class City {
+    public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
+    @Setter
+    private String name;
+    @Setter
+    private Player owner;
+    private List<Player> players = new ArrayList<>();
 
-    public City(String name, String owner) {
-        super(null, name);
+    public City(String name, Player owner) {
         this.name = name;
         this.owner = owner;
-        this.inventory = getInventory();
+        players.add(owner);
     }
 
-    public String getName() {
-        return name;
+    public static City getCitybyPlayer(Player player) {
+        return playerCityHashMap.get(player);
     }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    @Override
-    protected ItemStack[] items() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'items'");
-    }
-
-    @Override
-    public void clickCallback(InventoryClickEvent event) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clickCallback'");
-    }
-    
-    
 }

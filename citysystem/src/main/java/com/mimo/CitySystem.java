@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+
 public class CitySystem extends JavaPlugin implements Listener{
     public static CitySystem INSTANCE = null;
 
