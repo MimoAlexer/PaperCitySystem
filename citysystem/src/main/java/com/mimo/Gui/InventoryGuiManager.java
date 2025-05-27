@@ -1,5 +1,6 @@
 package com.mimo.Gui;
 
+import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
