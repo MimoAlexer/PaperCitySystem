@@ -9,17 +9,17 @@ import org.bukkit.inventory.ItemStack;
 
 public class MainGui extends BasicInventoryGui {
     public MainGui(Player player) {
-        String title = City.getCitybyPlayer(player).getName();
+        String title = City.getCityByPlayer(player).getName();
         super(player, title);
     }
 
     @Override
     protected ItemStack[] items() {
-        addItem(9, 3, Material.BARRIER);
-        addItem(2, 2, Material.PLAYER_HEAD);
+        addItem(9, 3, Material.BARRIER, null);
+        addItem(2, 2, Material.PLAYER_HEAD, null);
         for(int i = 0; i < 8; i++) {
-            addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
-            addItem(i, 6, Material.GRAY_STAINED_GLASS_PANE);
+            addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE, null);
+            addItem(i, 6, Material.GRAY_STAINED_GLASS_PANE, null);
         }
         return new ItemStack[0];
     }

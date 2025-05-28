@@ -1,6 +1,7 @@
 package com.mimo.CityGui;
 
 import com.mimo.Gui.BasicInventoryGui;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -8,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class CityPlayerInfoGui extends BasicInventoryGui {
-    private Player infoPlayer;
+    private final Player infoPlayer;
 
     public CityPlayerInfoGui(Player player, Player infoPlayer) {
         this.infoPlayer = infoPlayer;
@@ -18,21 +19,21 @@ public class CityPlayerInfoGui extends BasicInventoryGui {
     @Override
     protected ItemStack[] items() {
         for (int col = 0; col < 10; col++) {
-            addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
-            addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
+            addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType(), null);
+            addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType(), null);
         }
-        addItem(9, 6, Material.BARRIER);
+        addItem(9, 6, Material.BARRIER, null);
         ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         if (meta != null) {
             meta.setOwningPlayer(infoPlayer);
-            meta.setDisplayName(infoPlayer.getName()); // TODO: maybe is there a better way to display the name?
+            meta.displayName(Component.text(infoPlayer.getName()));
             head.setItemMeta(meta);
         }
-        addItem(4, 3, head.getType());
+        addItem(4, 3, null, head);
         ItemStack infoExp = new ItemStack(Material.EXPERIENCE_BOTTLE);
-        infoExp.getItemMeta().setDisplayName(infoPlayer.getTotalExperience() + " XP");
-        // TODO: Add(addItem) method
+        infoExp.getItemMeta().displayName(Component.text(infoPlayer.getTotalExperience() + " XP"));
+        addItem(6, 2, null, infoExp);
         return new ItemStack[0];
     }
 

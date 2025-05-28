@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class BasicInventoryGui implements InventoryHolder {
     protected final Inventory inventory;
@@ -24,13 +25,26 @@ public abstract class BasicInventoryGui implements InventoryHolder {
         inventory.setContents(items);
     }
 
-    protected void addItem(int x, int y, Material material) {
+    protected void addItem(int x, int y, @Nullable Material material, @Nullable ItemStack itemStack ) {
         int slot = y * 9 + x;
         if (x < 0 || x > 8 || slot < 0 || slot >= inventory.getSize()) {
             throw new IndexOutOfBoundsException(
                     "Invalid inventory coordinates: (" + x + "," + y + ")");
         }
-        inventory.setItem(slot, new ItemStack(material));
+
+        if( material == null && itemStack == null) {
+            throw new IllegalArgumentException("Either material or itemStack must be provided.");
+        }
+
+        if(material != null && itemStack != null) {
+            throw new IllegalArgumentException("Only one of material or itemStack should be provided.");
+        }
+
+        if(material != null) {
+            itemStack = new ItemStack(material);
+        }
+
+        inventory.setItem(slot, itemStack);
     }
 
     public boolean isItemStackClicked(@NotNull InventoryClickEvent event, @NotNull Material material) {

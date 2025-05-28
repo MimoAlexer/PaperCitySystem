@@ -24,7 +24,7 @@ public class City {
         players.add(owner);
     }
 
-    public static City getCitybyPlayer(Player player) {
+    public static City getCityByPlayer(Player player) {
         return playerCityHashMap.get(player);
     }
 }
