@@ -17,11 +17,11 @@ public class CityPlayerInfoGui extends BasicInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        addItem(9, 3, Material.BARRIER);
         for (int col = 0; col < 10; col++) {
             addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
             addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
         }
+        addItem(9, 6, Material.BARRIER);
         ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         if (meta != null) {
@@ -29,6 +29,10 @@ public class CityPlayerInfoGui extends BasicInventoryGui {
             meta.setDisplayName(infoPlayer.getName()); // TODO: maybe is there a better way to display the name?
             head.setItemMeta(meta);
         }
+        addItem(4, 3, head.getType());
+        ItemStack infoExp = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        infoExp.getItemMeta().setDisplayName(infoPlayer.getTotalExperience() + " XP");
+        // TODO: Add(addItem) method
         return new ItemStack[0];
     }
 
