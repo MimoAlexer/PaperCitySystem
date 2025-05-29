@@ -12,8 +12,8 @@ public class CityPlayerInfoGui extends BasicInventoryGui {
     private final Player infoPlayer;
 
     public CityPlayerInfoGui(Player player, Player infoPlayer) {
-        this.infoPlayer = infoPlayer;
         super(player, infoPlayer.getName() + "'s Info");
+        this.infoPlayer = infoPlayer;
     }
 
     @Override

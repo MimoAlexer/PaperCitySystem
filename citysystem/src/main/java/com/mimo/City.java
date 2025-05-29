@@ -24,7 +24,10 @@ public class City {
         this.name = name;
         this.owner = owner;
         players.add(owner);
+        playerCityHashMap.put(owner, this);
     }
+
+    // TODO: Implement methods add Players/Revmove
 
     public static City getCityByPlayer(Player player) {
         return playerCityHashMap.get(player);

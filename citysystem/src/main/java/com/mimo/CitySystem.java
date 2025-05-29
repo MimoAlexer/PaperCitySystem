@@ -1,12 +1,17 @@
 package com.mimo;
 
+import com.mimo.commands.CommandManager;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 
-public class CitySystem extends JavaPlugin implements Listener{
+public class CitySystem extends JavaPlugin implements Listener {
     public static CitySystem INSTANCE = null;
 
     public CitySystem() {
@@ -17,6 +22,11 @@ public class CitySystem extends JavaPlugin implements Listener{
     public void onEnable() {
         // Plugin startup logic
         getLogger().info("CitySystem has been enabled!");
+        LifecycleEventManager<Plugin> manager = this.getLifecycleManager();
+        manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            final Commands commands = event.registrar();
+            new CommandManager(commands);
+        });
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 

@@ -9,22 +9,26 @@ import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class CommandManager {
-    public static void registerCommands() {
-        Commands.literal("city")
-                .then(
-                        Commands.literal("create")
-                                .executes(CommandManager::cityCreateCommandSended)
-                )
-                .then(
-                        Commands.literal("claim")
-                                .executes(CommandManager::cityClaimCommandSended)
-                )
-                .then(
-                        Commands.literal("join")
-                                .executes(CommandManager::cityJoinCommandSended)
-                )
-                .executes(CommandManager::cityCommandSended);
+    public CommandManager(Commands commands) {
+        commands.register(
+                Commands.literal("city")
+                        .then(
+                                Commands.literal("create")
+                                        .executes(CommandManager::cityCreateCommandSended)
+                        )
+                        .then(
+                                Commands.literal("claim")
+                                        .executes(CommandManager::cityClaimCommandSended)
+                        )
+                        .then(
+                                Commands.literal("join")
+                                        .executes(CommandManager::cityJoinCommandSended)
+                        )
+                        .executes(CommandManager::cityCommandSended).build(), "Manage Cities", List.of("c")
+        );
         // TODO: Implement the city command
     }
 
@@ -56,6 +60,10 @@ public class CommandManager {
     }
 
     public static int cityCreateCommandSended(CommandContext<CommandSourceStack> ctx) {
+        if (ctx.getSource().getExecutor() instanceof Player player) {
+            new City("test", player);
+        }
+        // TODO: add check when hes already in a City
         return 0;
     }
 }

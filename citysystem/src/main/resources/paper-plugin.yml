@@ -1,0 +1,7 @@
+name: "CitySystem"
+version: '1'
+main: "com.mimo.CitySystem"
+api-version: "1.21"
+website: "https://github.com/MimoAlexer"
+authors: [ "Mimo the Software engineer" ]
+description: "city system plugin for Minecraft servers"
