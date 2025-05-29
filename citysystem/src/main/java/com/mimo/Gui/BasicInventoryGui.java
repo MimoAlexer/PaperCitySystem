@@ -25,22 +25,22 @@ public abstract class BasicInventoryGui implements InventoryHolder {
         inventory.setContents(items);
     }
 
-    protected void addItem(int x, int y, @Nullable Material material, @Nullable ItemStack itemStack ) {
+    protected void addItem(int x, int y, @Nullable Material material, @Nullable ItemStack itemStack) {
         int slot = y * 9 + x;
         if (x < 0 || x > 8 || slot < 0 || slot >= inventory.getSize()) {
             throw new IndexOutOfBoundsException(
                     "Invalid inventory coordinates: (" + x + "," + y + ")");
         }
 
-        if( material == null && itemStack == null) {
+        if (material == null && itemStack == null) {
             throw new IllegalArgumentException("Either material or itemStack must be provided.");
         }
 
-        if(material != null && itemStack != null) {
+        if (material != null && itemStack != null) {
             throw new IllegalArgumentException("Only one of material or itemStack should be provided.");
         }
 
-        if(material != null) {
+        if (material != null) {
             itemStack = new ItemStack(material);
         }
 
@@ -48,7 +48,7 @@ public abstract class BasicInventoryGui implements InventoryHolder {
     }
 
     public boolean isItemStackClicked(@NotNull InventoryClickEvent event, @NotNull Material material) {
-        if(event.getCurrentItem() == null) return false;
+        if (event.getCurrentItem() == null) return false;
         return event.getCurrentItem().equals(new ItemStack(material));
     }
 
