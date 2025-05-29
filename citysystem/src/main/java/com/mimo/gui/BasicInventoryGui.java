@@ -1,4 +1,4 @@
-package com.mimo.Gui;
+package com.mimo.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

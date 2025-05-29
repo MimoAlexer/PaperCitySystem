@@ -1,0 +1,61 @@
+package com.mimo.commands;
+
+import com.mimo.City;
+import com.mimo.citygui.CityClaimGui;
+import com.mimo.citygui.CityMainGui;
+import com.mojang.brigadier.context.CommandContext;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
+
+public class CommandManager {
+    public static void registerCommands() {
+        Commands.literal("city")
+                .then(
+                        Commands.literal("create")
+                                .executes(CommandManager::cityCreateCommandSended)
+                )
+                .then(
+                        Commands.literal("claim")
+                                .executes(CommandManager::cityClaimCommandSended)
+                )
+                .then(
+                        Commands.literal("join")
+                                .executes(CommandManager::cityJoinCommandSended)
+                )
+                .executes(CommandManager::cityCommandSended);
+        // TODO: Implement the city command
+    }
+
+    public static int cityCommandSended(CommandContext<CommandSourceStack> ctx) {
+        if (ctx.getSource().getExecutor() instanceof Player player) {
+            if (!(City.playerCityHashMap.containsKey(player))) {
+                player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
+                return 0;
+            }
+            City city = City.getCityByPlayer(player);
+            new CityMainGui(player).show();
+        }
+        return 0;
+    }
+
+    public static int cityJoinCommandSended(CommandContext<CommandSourceStack> ctx) {
+        return 0;
+    }
+
+    public static int cityClaimCommandSended(CommandContext<CommandSourceStack> ctx) {
+        if (ctx.getSource().getExecutor() instanceof Player player) {
+            if (!(City.playerCityHashMap.containsKey(player))) {
+                player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>."));
+                return 0;
+            }
+            new CityClaimGui(player);
+        }
+        return 0;
+    }
+
+    public static int cityCreateCommandSended(CommandContext<CommandSourceStack> ctx) {
+        return 0;
+    }
+}

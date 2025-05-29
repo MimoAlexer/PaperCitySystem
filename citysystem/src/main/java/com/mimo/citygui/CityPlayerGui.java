@@ -1,7 +1,7 @@
-package com.mimo.CityGui;
+package com.mimo.citygui;
 
 import com.mimo.City;
-import com.mimo.Gui.BasicInventoryGui;
+import com.mimo.gui.BasicInventoryGui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,8 +12,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.List;
 
 public class CityPlayerGui extends BasicInventoryGui {
-    public CityPlayerGui(Player player, String title) {
-        super(player, title);
+    public CityPlayerGui(Player player) {
+        super(player, "Players of " + City.getCityByPlayer(player).getName());
     }
 
     @Override
@@ -44,12 +44,13 @@ public class CityPlayerGui extends BasicInventoryGui {
     @Override
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
-        switch (event.getCurrentItem()){
+        switch (event.getCurrentItem()) {
             case ItemStack _ when isItemStackClicked(event, Material.BARRIER) -> {
-                MainGui mainGui = new MainGui(player);
+                CityMainGui mainGui = new CityMainGui(player);
                 mainGui.show();
             }
-            case null -> {}
+            case null -> {
+            }
             default -> {
                 event.setCancelled(true);
                 return;

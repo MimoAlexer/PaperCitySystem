@@ -1,6 +1,6 @@
-package com.mimo.CityGui;
+package com.mimo.citygui;
 
-import com.mimo.Gui.BasicInventoryGui;
+import com.mimo.gui.BasicInventoryGui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -42,10 +42,11 @@ public class CityPlayerInfoGui extends BasicInventoryGui {
         event.setCancelled(true);
         switch (event.getCurrentItem()) {
             case ItemStack _ when isItemStackClicked(event, Material.BARRIER) -> {
-                MainGui mainGui = new MainGui(player);
+                CityMainGui mainGui = new CityMainGui(player);
                 mainGui.show();
             }
-            case null -> {}
+            case null -> {
+            }
             default -> {
                 event.setCancelled(true);
                 return;

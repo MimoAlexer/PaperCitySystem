@@ -3,6 +3,7 @@ package com.mimo;
 import it.unimi.dsi.fastutil.Hash;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 @Getter
 public class City {
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
+    private List<Chunk> chunks = new ArrayList<>();
     @Setter
     private String name;
     @Setter
