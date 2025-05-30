@@ -27,12 +27,12 @@ public class CommandManager {
                                 Commands.literal("join")
                                         .executes(CommandManager::cityJoinCommandSended)
                         )
-                        .executes(CommandManager::cityCommandSended).build(), "Manage Cities", List.of("c")
+                        .executes(CommandManager::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );
         // TODO: Implement the city command
     }
 
-    public static int cityCommandSended(CommandContext<CommandSourceStack> ctx) {
+    public static int cityCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getExecutor() instanceof Player player) {
             if (!(City.playerCityHashMap.containsKey(player))) {
                 player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
@@ -44,6 +44,7 @@ public class CommandManager {
         return 0;
     }
 
+    // TODO: Refactor name
     public static int cityJoinCommandSended(CommandContext<CommandSourceStack> ctx) {
         return 0;
     }

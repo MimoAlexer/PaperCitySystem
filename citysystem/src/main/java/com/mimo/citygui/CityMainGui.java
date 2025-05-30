@@ -16,7 +16,7 @@ public class CityMainGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        addItem(2, 2, Material.PLAYER_HEAD);
+        addItem(1, 2, Material.PLAYER_HEAD);
         for (int i = 0; i < 9; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
             addItem(i, 5, Material.GRAY_STAINED_GLASS_PANE);

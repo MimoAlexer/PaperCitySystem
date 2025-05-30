@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 
 public class InventoryGuiManager implements Listener {
@@ -14,18 +15,15 @@ public class InventoryGuiManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
-        // Get the top inventory (our GUI)
-        Inventory topInventory = event.getView().getTopInventory();
-        if (topInventory.getHolder() instanceof AbstractInventoryGui abstractInventoryGui) {
-            // Cancel clicks in player inventory to prevent item movement
-            if (event.getClickedInventory() != topInventory) {
-                event.setCancelled(true);
-                return;
-            }
+        Inventory inventory = event.getInventory();
+        InventoryHolder inventoryHolder = inventory.getHolder();
+        if (inventoryHolder == null)
+            return;
+
+        if (inventoryHolder instanceof AbstractInventoryGui abstractInventoryGui)
             abstractInventoryGui.clickCallback(event);
-        }
     }
 
     @EventHandler(ignoreCancelled = true)

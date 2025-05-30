@@ -11,8 +11,6 @@ import java.util.function.BiFunction;
 
 public class GenericConfirmationGui extends AbstractInventoryGui {
 
-    // TODO: WIP
-
     public static final ItemStack CONFIRM_ITEM = new ItemStack(Material.GREEN_WOOL);
     public static final ItemStack CANCEL_ITEM = new ItemStack(Material.RED_WOOL);
 

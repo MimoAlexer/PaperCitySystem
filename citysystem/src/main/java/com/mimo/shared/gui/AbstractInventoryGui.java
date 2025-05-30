@@ -26,7 +26,7 @@ public abstract class AbstractInventoryGui implements InventoryHolder {
         this.player = player;
         this.title = title;
         this.rows = Math.min(6, Math.max(1, rows));
-        this.inventory = Bukkit.createInventory(this, rows * 9, title);
+        inventory = Bukkit.createInventory(this, rows * 9, title);
     }
 
     public static int correctInvSize(int size) {
