@@ -16,7 +16,7 @@ public class CityMainGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        addItem(8, 3, Material.BARRIER);
+        addItem(8, 3, Material.BARRIER); // TODO: Makes a NullPointerException fix this
         addItem(2, 2, Material.PLAYER_HEAD);
         for (int i = 0; i < 8; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);

@@ -18,7 +18,7 @@ public class CityPlayerGui extends AbstractInventoryGui {
     }
 
     @Override
-    protected ItemStack[] items() {
+    protected ItemStack[] items() { // TODO: Implement new PlayerHeads System
         addItem(8, 3, new ItemStack(Material.BARRIER).getType());
         for (int col = 0; col < 10; col++) {
             addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
