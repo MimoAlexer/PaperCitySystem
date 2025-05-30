@@ -3,6 +3,7 @@ package com.mimo.commands;
 import com.mimo.City;
 import com.mimo.citygui.CityClaimGui;
 import com.mimo.citygui.CityMainGui;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -17,7 +18,9 @@ public class CommandManager {
                 Commands.literal("city")
                         .then(
                                 Commands.literal("create")
-                                        .executes(CommandManager::cityCreateCommandSended)
+                                        .then(Commands.argument("name", StringArgumentType.word())
+                                                .executes(CommandManager::cityCreateCommandExecute)
+                                        )
                         )
                         .then(
                                 Commands.literal("claim")
@@ -25,7 +28,9 @@ public class CommandManager {
                         )
                         .then(
                                 Commands.literal("join")
-                                        .executes(CommandManager::cityJoinCommandSended)
+                                        .then(Commands.argument("name", StringArgumentType.word())
+                                                .executes(CommandManager::cityJoinCommandExecute)
+                                        )
                         )
                         .executes(CommandManager::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );
@@ -40,12 +45,13 @@ public class CommandManager {
             }
             City city = City.getCityByPlayer(player);
             new CityMainGui(player).show();
+            return 1;
         }
         return 0;
     }
 
-    // TODO: Refactor name
-    public static int cityJoinCommandSended(CommandContext<CommandSourceStack> ctx) {
+    public static int cityJoinCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        // TODO: Implement with the name Argument
         return 0;
     }
 
@@ -56,15 +62,20 @@ public class CommandManager {
                 return 0;
             }
             new CityClaimGui(player).show();
+            return 1;
         }
         return 0;
     }
 
-    public static int cityCreateCommandSended(CommandContext<CommandSourceStack> ctx) {
-        if (ctx.getSource().getExecutor() instanceof Player player) {
-            new City("test", player);
+    public static int cityCreateCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        if (ctx.getSource().getExecutor() instanceof Player player && City.playerCityHashMap.containsKey(player)) {
+            player.sendMessage(Component.text("You are already in " + City.getCityByPlayer(player).getName() + "!"));
+            return 1;
         }
-        // TODO: add check when hes already in a City
+
+        if (ctx.getSource().getExecutor() instanceof Player player) {
+            new City(ctx.getArgument("name", String.class), player);
+        }
         return 0;
     }
 }
