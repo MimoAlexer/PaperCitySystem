@@ -20,8 +20,8 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
     @Override
     protected ItemStack[] items() {
         for (int col = 0; col < 10; col++) {
-            addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
-            addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
+            addItem(col, 0, Material.GRAY_STAINED_GLASS_PANE);
+            addItem(col, 6, Material.GRAY_STAINED_GLASS_PANE);
         }
         addItem(8, 6, Material.BARRIER);
         ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
@@ -33,7 +33,11 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
         }
         addItem(4, 3, head);
         ItemStack infoExp = new ItemStack(Material.EXPERIENCE_BOTTLE);
-        infoExp.getItemMeta().displayName(Component.text(infoPlayer.getTotalExperience() + " XP"));
+        var itemMeta = infoExp.getItemMeta();
+        if (itemMeta != null) {
+            itemMeta.displayName(Component.text(infoPlayer.getTotalExperience() + " XP"));
+            infoExp.setItemMeta(itemMeta);
+        }
         addItem(6, 2, infoExp);
         return new ItemStack[0];
     }

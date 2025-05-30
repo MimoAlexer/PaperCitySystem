@@ -11,6 +11,7 @@ public class CityClaimGui extends AbstractInventoryGui {
 
     public CityClaimGui(Player player) {
         super(player, Component.text("Claim Gui"));
+        // Don't call show() in constructor
     }
 
     @Override

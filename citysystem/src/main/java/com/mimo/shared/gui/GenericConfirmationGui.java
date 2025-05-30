@@ -25,25 +25,24 @@ public class GenericConfirmationGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        return new ItemStack[]{
-                CONFIRM_ITEM,
-                CONFIRM_ITEM,
-                CONFIRM_ITEM,
-                CONFIRM_ITEM,
-                null,
-                CANCEL_ITEM,
-                CANCEL_ITEM,
-                CANCEL_ITEM,
-                CANCEL_ITEM
-        };
+        inventory.setItem(0, CONFIRM_ITEM);
+        inventory.setItem(1, CONFIRM_ITEM);
+        inventory.setItem(2, CONFIRM_ITEM);
+        inventory.setItem(3, CONFIRM_ITEM);
+        inventory.setItem(5, CANCEL_ITEM);
+        inventory.setItem(6, CANCEL_ITEM);
+        inventory.setItem(7, CANCEL_ITEM);
+        inventory.setItem(8, CANCEL_ITEM);
+        return new ItemStack[0];
     }
 
     @Override
     protected void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
         ItemStack itemStack = event.getCurrentItem();
-        if (itemStack == null || event.getWhoClicked() instanceof Player player)
+        if (itemStack == null) {
             return;
+        }
 
         boolean isConfirm = itemStack.equals(CONFIRM_ITEM);
         boolean isCancel = itemStack.equals(CANCEL_ITEM);

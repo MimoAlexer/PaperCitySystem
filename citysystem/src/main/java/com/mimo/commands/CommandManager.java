@@ -54,7 +54,7 @@ public class CommandManager {
                 player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>."));
                 return 0;
             }
-            new CityClaimGui(player);
+            new CityClaimGui(player).show();
         }
         return 0;
     }

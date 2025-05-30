@@ -1,5 +1,6 @@
 package com.mimo.shared.gui;
 
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,18 +10,23 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public abstract class AbstractInventoryGui implements InventoryHolder {
     protected final Player player;
+    @Getter
     protected Inventory inventory;
     protected Component title;
+    protected final int rows;
 
     public AbstractInventoryGui(Player player, Component title) {
+        this(player, title, 6);
+    }
+
+    public AbstractInventoryGui(Player player, Component title, int rows) {
         this.player = player;
         this.title = title;
+        this.rows = Math.min(6, Math.max(1, rows));
+        this.inventory = Bukkit.createInventory(this, rows * 9, title);
     }
 
     public static int correctInvSize(int size) {
@@ -32,33 +38,32 @@ public abstract class AbstractInventoryGui implements InventoryHolder {
     }
 
     protected void addItem(int x, int y, ItemStack itemStack) {
-        int slot = y * 9 + x;
-        if (x < 0 || x > 8 || slot < 0 || slot >= inventory.getSize()) {
+        if (x < 0 || x > 8) {
             throw new IndexOutOfBoundsException(
-                    "Invalid inventory coordinates: (" + x + "," + y + ")");
+                    "Invalid x-coordinate: " + x + ", must be between 0 and 8");
         }
+        if (y < 0 || y >= rows) {
+            throw new IndexOutOfBoundsException(
+                    "Invalid y-coordinate: " + y + ", must be between 0 and " + (rows - 1));
+        }
+
+        int slot = y * 9 + x;
         inventory.setItem(slot, itemStack);
     }
 
     public void show() {
-        ItemStack[] items = items();
-        int inventorySize = correctInvSize(items.length); // must be multiple of 9
-        inventory = Bukkit.createInventory(this, inventorySize, title);
-        inventory.setContents(items);
+        items();
         player.openInventory(inventory);
     }
 
     public boolean isItemStackClicked(Material material, InventoryClickEvent event) {
-        return Objects.equals(Objects.requireNonNull(event.getCurrentItem()).getType(), material);
+        ItemStack clickedItem = event.getCurrentItem();
+        return clickedItem != null && clickedItem.getType() == material;
     }
 
     public boolean isItemStackClicked(ItemStack itemStack, InventoryClickEvent event) {
-        return Objects.equals(event.getCurrentItem(), itemStack);
-    }
-
-    @Override
-    public @NotNull Inventory getInventory() {
-        return inventory;
+        ItemStack clickedItem = event.getCurrentItem();
+        return clickedItem != null && clickedItem.equals(itemStack);
     }
 
     protected abstract ItemStack[] items();
