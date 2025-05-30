@@ -1,27 +1,28 @@
 package com.mimo.citygui;
 
 import com.mimo.City;
-import com.mimo.gui.BasicInventoryGui;
+import com.mimo.shared.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
 
-public class CityPlayerGui extends BasicInventoryGui {
+public class CityPlayerGui extends AbstractInventoryGui {
     public CityPlayerGui(Player player) {
-        super(player, "Players of " + City.getCityByPlayer(player).getName());
+        super(player, Component.text("Players of " + City.getCityByPlayer(player).getName()));
     }
 
     @Override
     protected ItemStack[] items() {
-        addItem(9, 3, new ItemStack(Material.BARRIER).getType(), null);
+        addItem(9, 3, new ItemStack(Material.BARRIER).getType());
         for (int col = 0; col < 10; col++) {
-            addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType(), null);
-            addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType(), null);
+            addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
+            addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
         }
         List<Player> members = City.getCityByPlayer(player).getPlayers();
         for (int i = 0; i < members.size(); i++) {
@@ -35,7 +36,7 @@ public class CityPlayerGui extends BasicInventoryGui {
             }
             int col = i % 10;
             int row = 3 + (i / 10);
-            addItem(col, row, head.getType(), head);
+            addItem(col, row, head);
         }
         return new ItemStack[0];
     }
@@ -45,7 +46,7 @@ public class CityPlayerGui extends BasicInventoryGui {
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
         switch (event.getCurrentItem()) {
-            case ItemStack _ when isItemStackClicked(event, Material.BARRIER) -> {
+            case ItemStack _ when isItemStackClicked(Material.BARRIER, event) -> {
                 CityMainGui mainGui = new CityMainGui(player);
                 mainGui.show();
             }
@@ -56,5 +57,10 @@ public class CityPlayerGui extends BasicInventoryGui {
                 return;
             }
         }
+    }
+
+    @Override
+    protected void inventoryCloseCallback(InventoryCloseEvent event) {
+
     }
 }
