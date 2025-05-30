@@ -19,7 +19,7 @@ public class CityPlayerGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        addItem(9, 3, new ItemStack(Material.BARRIER).getType());
+        addItem(8, 3, new ItemStack(Material.BARRIER).getType());
         for (int col = 0; col < 10; col++) {
             addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
             addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
@@ -45,18 +45,7 @@ public class CityPlayerGui extends AbstractInventoryGui {
     @Override
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
-        switch (event.getCurrentItem()) {
-            case ItemStack _ when isItemStackClicked(Material.BARRIER, event) -> {
-                CityMainGui mainGui = new CityMainGui(player);
-                mainGui.show();
-            }
-            case null -> {
-            }
-            default -> {
-                event.setCancelled(true);
-                return;
-            }
-        }
+        if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
     }
 
     @Override

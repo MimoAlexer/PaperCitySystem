@@ -23,7 +23,7 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
             addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
             addItem(col, 6, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
         }
-        addItem(9, 6, Material.BARRIER);
+        addItem(8, 6, Material.BARRIER);
         ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         if (meta != null) {
@@ -41,18 +41,7 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
     @Override
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
-        switch (event.getCurrentItem()) {
-            case ItemStack _ when isItemStackClicked(Material.BARRIER, event) -> {
-                CityMainGui mainGui = new CityMainGui(player);
-                mainGui.show();
-            }
-            case null -> {
-            }
-            default -> {
-                event.setCancelled(true);
-                return;
-            }
-        }
+        if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
     }
 
     @Override

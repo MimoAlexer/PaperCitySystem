@@ -16,7 +16,7 @@ public class CityMainGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        addItem(9, 3, Material.BARRIER);
+        addItem(8, 3, Material.BARRIER);
         addItem(2, 2, Material.PLAYER_HEAD);
         for (int i = 0; i < 8; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
@@ -28,20 +28,8 @@ public class CityMainGui extends AbstractInventoryGui {
     @Override
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
-        switch (event.getCurrentItem()) {
-            case ItemStack _ when isItemStackClicked(Material.BARRIER, event) -> {
-                event.getWhoClicked().closeInventory();
-            }
-            case ItemStack _ when isItemStackClicked(Material.PLAYER_HEAD, event) -> {
-                CityPlayerGui cityPlayerGui = new CityPlayerGui(player);
-                cityPlayerGui.show();
-            }
-            case null -> {
-            }
-            default -> {
-                return;
-            }
-        }
+        if (isItemStackClicked(Material.BARRIER, event)) event.getWhoClicked().closeInventory();
+        if (isItemStackClicked(Material.PLAYER_HEAD, event)) new CityPlayerGui(player).show();
     }
 
     @Override
