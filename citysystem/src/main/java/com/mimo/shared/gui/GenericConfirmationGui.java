@@ -40,17 +40,17 @@ public abstract class GenericConfirmationGui extends AbstractInventoryGui {
         boolean isConfirm = itemStack.equals(CONFIRM_ITEM);
         boolean isCancel = itemStack.equals(CANCEL_ITEM);
         if (isConfirm) {
-            onConfirm(player);
+            onConfirm(event);
         } else if (isCancel) {
-            onCancel(player);
+            onCancel(event);
         }
     }
 
     // WIP
 
-    public abstract void onConfirm(Player player);
+    public abstract void onConfirm(InventoryClickEvent event);
 
-    public abstract void onCancel(Player player);
+    public abstract void onCancel(InventoryClickEvent event);
 
     @Override
     protected void inventoryCloseCallback(InventoryCloseEvent event) {
