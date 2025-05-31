@@ -18,7 +18,7 @@ public class CityPlayerGui extends AbstractInventoryGui {
     }
 
     @Override
-    protected ItemStack[] items() { // TODO: Implement new PlayerHeads System
+    protected ItemStack[] items() {
         for (int col = 0; col < 9; col++) {
             addItem(col, 0, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
             addItem(col, 5, new ItemStack(Material.GRAY_STAINED_GLASS_PANE).getType());
@@ -40,6 +40,10 @@ public class CityPlayerGui extends AbstractInventoryGui {
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
+        if (isItemStackClicked(Material.PLAYER_HEAD, event)) {
+            // TODO: add a way to get the player from the clicked item
+            // new CityPlayerInfoGui(player, );
+        }
     }
 
     @Override

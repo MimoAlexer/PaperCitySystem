@@ -7,18 +7,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.function.BiFunction;
-
-public class GenericConfirmationGui extends AbstractInventoryGui {
+public abstract class GenericConfirmationGui extends AbstractInventoryGui {
 
     public static final ItemStack CONFIRM_ITEM = new ItemStack(Material.GREEN_WOOL);
     public static final ItemStack CANCEL_ITEM = new ItemStack(Material.RED_WOOL);
 
-    private final BiFunction<Player, Boolean, Void> function;
-
-    public GenericConfirmationGui(Player player, Component title, BiFunction<Player, Boolean, Void> function) {
+    public GenericConfirmationGui(Player player, Component title) {
         super(player, title);
-        this.function = function;
     }
 
     @Override
@@ -44,11 +39,18 @@ public class GenericConfirmationGui extends AbstractInventoryGui {
 
         boolean isConfirm = itemStack.equals(CONFIRM_ITEM);
         boolean isCancel = itemStack.equals(CANCEL_ITEM);
-        if (isConfirm || isCancel) {
-            function.apply(player, isConfirm);
-            player.closeInventory();
+        if (isConfirm) {
+            onConfirm(player);
+        } else if (isCancel) {
+            onCancel(player);
         }
     }
+
+    // WIP
+
+    public abstract void onConfirm(Player player);
+
+    public abstract void onCancel(Player player);
 
     @Override
     protected void inventoryCloseCallback(InventoryCloseEvent event) {

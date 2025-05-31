@@ -1,6 +1,5 @@
 package com.mimo;
 
-import it.unimi.dsi.fastutil.Hash;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Chunk;
@@ -27,7 +26,19 @@ public class City {
         playerCityHashMap.put(owner, this);
     }
 
-    // TODO: Implement methods add Players/Revmove
+    public void addPlayer(Player player) {
+        if (!players.contains(player)) {
+            players.add(player);
+            playerCityHashMap.put(player, this);
+        }
+    }
+
+    public void removePlayer(Player player) {
+        if (players.contains(player)) {
+            players.remove(player);
+            playerCityHashMap.remove(player);
+        }
+    }
 
     public static City getCityByPlayer(Player player) {
         return playerCityHashMap.get(player);
