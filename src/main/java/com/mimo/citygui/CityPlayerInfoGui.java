@@ -17,22 +17,6 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
         this.infoPlayer = infoPlayer;
     }
 
-    /**
-     * Generates an array of {@link ItemStack} objects representing the items to be displayed
-     * in the GUI. This layout includes decorative glass panes, a player head representing the
-     * information about a specific player, a barrier for navigation, and an experience bottle
-     * showing the player's total experience points.
-     * <p>
-     * Decorative elements:
-     * - Fills the first and last rows with gray stained-glass panes.
-     * - Includes a barrier item in the bottom right corner for navigation.
-     * Player-specific elements:
-     * - Displays the player's head in the center.
-     * - Shows the total experience of the player beside their head.
-     *
-     * @return an array of {@link ItemStack}, representing layout and content of the GUI.
-     * Typically, returns an empty array as items are directly placed into the inventory grid.
-     */
     @Override
     protected ItemStack[] items() {
         for (int col = 0; col < 10; col++) {
