@@ -18,6 +18,10 @@ public abstract class GenericConfirmationGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
+        for (int i = 0; i < 9; i++) {
+            addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
+            addItem(i, 5, Material.GRAY_STAINED_GLASS_PANE);
+        }
         inventory.setItem(0, CONFIRM_ITEM);
         inventory.setItem(1, CONFIRM_ITEM);
         inventory.setItem(2, CONFIRM_ITEM);
@@ -45,8 +49,6 @@ public abstract class GenericConfirmationGui extends AbstractInventoryGui {
             onCancel(event);
         }
     }
-
-    // WIP
 
     public abstract void onConfirm(InventoryClickEvent event);
 

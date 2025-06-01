@@ -4,6 +4,7 @@ import com.mimo.City;
 import com.mimo.shared.PlayerHeads;
 import com.mimo.shared.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -11,6 +12,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CityPlayerGui extends AbstractInventoryGui {
     public CityPlayerGui(Player player) {
@@ -41,8 +43,25 @@ public class CityPlayerGui extends AbstractInventoryGui {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) {
-            // TODO: add a way to get the player from the clicked item
-            // new CityPlayerInfoGui(player, );
+            new CityPlayerInfoGui(
+                    player,
+                    Objects.
+                            requireNonNull(
+                                    Bukkit.
+                                            getPlayer(
+                                                    Objects.
+                                                            requireNonNull(
+                                                                    Objects.
+                                                                            requireNonNull(
+                                                                                    event.
+                                                                                            getCurrentItem()
+                                                                            ).
+                                                                            getItemMeta()
+                                                                            .displayName()).
+                                                            toString()
+                                            )
+                            )
+            );
         }
     }
 
