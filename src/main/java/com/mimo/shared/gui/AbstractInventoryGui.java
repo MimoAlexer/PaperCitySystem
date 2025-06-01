@@ -22,6 +22,13 @@ public abstract class AbstractInventoryGui implements InventoryHolder {
         this(player, title, 6);
     }
 
+    /**
+     * Constructs an abstract inventory GUI with the specified player, title, and number of rows.
+     *
+     * @param player the player who will interact with the inventory
+     * @param title  the title of the inventory, displayed at the top
+     * @param rows   the number of rows in the inventory, clamped between 1 and 6
+     */
     public AbstractInventoryGui(Player player, Component title, int rows) {
         this.player = player;
         this.title = title;

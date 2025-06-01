@@ -13,6 +13,13 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class CommandManager {
+    /**
+     * CommandManager is responsible for registering and managing all city-related commands
+     * in the system. It creates subcommands for creating, claiming, and joining cities, along
+     * with the base city command.
+     *
+     * @param commands the Commands instance used to register city-related commands.
+     */
     public CommandManager(Commands commands) {
         commands.register(
                 Commands.literal("city")
