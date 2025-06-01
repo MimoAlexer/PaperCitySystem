@@ -6,7 +6,10 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +31,20 @@ public class CitySystem extends JavaPlugin implements Listener {
         });
         new InventoryGuiManager(this);
         Bukkit.getPluginManager().registerEvents(this, this);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        for (City city : City.playerCityHashMap.values()) {
+            if (!(city.getChunks().equals(event.getBlock().getChunk()))) {
+                return;
+            }
+            if (!(city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).blockBreakPermission)) {
+                player.sendMessage("You don't have permission to break blocks in this city!");
+                return;
+            }
+        }
     }
 
     @Override

@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 public class City {
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
+    public static HashMap<Player, Permissions> playerPermissionsHashMap = new HashMap<>();
     private List<Chunk> chunks = new ArrayList<>();
     @Setter
     private String name;
@@ -30,7 +31,12 @@ public class City {
         if (!players.contains(player)) {
             players.add(player);
             playerCityHashMap.put(player, this);
+            playerPermissionsHashMap.put(player, new Permissions());
         }
+    }
+
+    public Permissions getPermissions(Player player) {
+        return playerPermissionsHashMap.get(player);
     }
 
     public void removePlayer(Player player) {
