@@ -13,12 +13,12 @@ import java.util.List;
 public class City {
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
     public static HashMap<Player, Permissions> playerPermissionsHashMap = new HashMap<>();
-    private List<Chunk> chunks = new ArrayList<>();
+    private final List<Chunk> chunks = new ArrayList<>();
     @Setter
     private String name;
     @Setter
     private Player owner;
-    private List<Player> players = new ArrayList<>();
+    private final List<Player> players = new ArrayList<>();
 
     public City(String name, Player owner) {
         this.name = name;
