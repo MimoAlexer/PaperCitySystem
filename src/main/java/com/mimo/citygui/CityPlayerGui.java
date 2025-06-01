@@ -42,6 +42,7 @@ public class CityPlayerGui extends AbstractInventoryGui {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) {
+            // CHAT IS THAT BRIGARDIER???????
             new CityPlayerInfoGui(
                     player,
                     Objects.

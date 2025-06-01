@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class CityClaimGui extends AbstractInventoryGui {
+    // TODO: WIP
 
     public CityClaimGui(Player player) {
         super(player, Component.text("Claim Gui"));
