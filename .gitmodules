@@ -1,9 +1,9 @@
 [submodule "base-pom"]
 	path = base-pom
 	url = https://codeberg.org/BlockFriedenTeam/base-pom.git
-[submodule "src/main/java/de/blockfrieden/com.mimo.shared"]
-	path = src/main/java/de/blockfrieden/com.mimo.shared
+[submodule "src/main/java/de/blockfrieden/com.mimo.api"]
+	path = src/main/java/de/blockfrieden/com.mimo.api
 	url = https://codeberg.org/BlockFriedenTeam/BlockFriedenShared.git
-[submodule "citysystem/src/main/java/de/blockfrieden/com.mimo.shared"]
-	path = citysystem/src/main/java/de/blockfrieden/com.mimo.shared
+[submodule "citysystem/src/main/java/de/blockfrieden/com.mimo.api"]
+	path = citysystem/src/main/java/de/blockfrieden/com.mimo.api
 	url = https://codeberg.org/BlockFriedenTeam/BlockFriedenShared.git

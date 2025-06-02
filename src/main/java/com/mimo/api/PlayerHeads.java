@@ -1,4 +1,4 @@
-package com.mimo.shared;
+package com.mimo.api;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;

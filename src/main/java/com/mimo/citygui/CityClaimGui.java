@@ -1,7 +1,7 @@
 package com.mimo.citygui;
 
 import com.mimo.City;
-import com.mimo.shared.gui.AbstractInventoryGui;
+import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
 import org.bukkit.Material;

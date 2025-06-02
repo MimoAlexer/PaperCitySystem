@@ -1,4 +1,4 @@
-package com.mimo.shared;
+package com.mimo.api;
 
 public class AbstractPersonalBossbar {
 }

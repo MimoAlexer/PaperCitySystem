@@ -1,4 +1,4 @@
-package com.mimo.shared.gui;
+package com.mimo.api.gui;
 
 import lombok.Getter;
 import net.kyori.adventure.text.Component;

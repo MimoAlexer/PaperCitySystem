@@ -1,7 +1,7 @@
 package com.mimo;
 
+import com.mimo.api.gui.InventoryGuiManager;
 import com.mimo.commands.CommandManager;
-import com.mimo.shared.gui.InventoryGuiManager;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;

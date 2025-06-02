@@ -1,4 +1,4 @@
-package com.mimo.shared.gui;
+package com.mimo.api.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
