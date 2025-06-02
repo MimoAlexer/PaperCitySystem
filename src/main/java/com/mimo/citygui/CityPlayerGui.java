@@ -4,17 +4,18 @@ import com.mimo.City;
 import com.mimo.shared.PlayerHeads;
 import com.mimo.shared.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class CityPlayerGui extends AbstractInventoryGui {
+    public HashMap<ItemStack, Player> itemStackPlayerHashMap = new HashMap<>();
+
     public CityPlayerGui(Player player) {
         super(player, Component.text("Players of " + City.getCityByPlayer(player).getName()));
     }
@@ -32,7 +33,9 @@ public class CityPlayerGui extends AbstractInventoryGui {
             int x = i + 1;
             int col = x % 10;
             int row = 2 + (i / 9);
-            addItem(col, row, PlayerHeads.fromUuid(member.getUniqueId()));
+            ItemStack head = PlayerHeads.fromUuid(member.getUniqueId());
+            itemStackPlayerHashMap.put(head, member);
+            addItem(col, row, head);
         }
         return new ItemStack[0];
     }
@@ -42,25 +45,9 @@ public class CityPlayerGui extends AbstractInventoryGui {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) {
-            // CHAT IS THAT BRIGARDIER???????
             new CityPlayerInfoGui(
                     player,
-                    Objects.
-                            requireNonNull(
-                                    Bukkit.
-                                            getPlayer(
-                                                    Objects.
-                                                            requireNonNull(
-                                                                    Objects.
-                                                                            requireNonNull(
-                                                                                    event.
-                                                                                            getCurrentItem()
-                                                                            ).
-                                                                            getItemMeta()
-                                                                            .displayName()).
-                                                            toString()
-                                            )
-                            )
+                    itemStackPlayerHashMap.get(event.getCurrentItem())
             );
         }
     }
