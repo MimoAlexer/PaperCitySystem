@@ -40,7 +40,7 @@ public class CitySystem extends JavaPlugin implements Listener {
             if (!(city.getChunks().equals(event.getBlock().getChunk()))) {
                 return;
             }
-            if (!(city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).blockBreakPermission)) {
+            if (!(city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).hasBlockBreakPermission)) {
                 player.sendMessage("You don't have permission to break blocks in this city!");
                 return;
             }

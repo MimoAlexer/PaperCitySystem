@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Permissions {
-    public boolean blockBreakPermission = false;
-    public boolean blockPlacePermission = false;
-    public boolean interactPermission = false;
-    public boolean claimPermission = false;
+    public boolean hasBlockBreakPermission = false;
+    public boolean hasBlockPlacePermission = false;
+    public boolean hasInteractPermission = false;
+    public boolean hasClaimPermission = false;
 }

@@ -129,7 +129,7 @@ public class CityClaimGui extends AbstractInventoryGui {
     }
 
     private void attemptToClaimChunk(int chunkX, int chunkZ) {
-        if (playerCity.getPermissions(player).isClaimPermission()) {
+        if (playerCity.getPermissions(player).hasClaimPermission) {
             Chunk chunk = player.getWorld().getChunkAt(chunkX, chunkZ);
             if (!playerCity.getChunks().contains(chunk)) {
                 playerCity.getChunks().add(chunk);
