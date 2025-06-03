@@ -5,12 +5,16 @@ import com.mimo.citygui.CityClaimGui;
 import com.mimo.citygui.CityMainGui;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class CommandManager {
     public CommandManager(Commands commands) {
@@ -29,12 +33,12 @@ public class CommandManager {
                         .then(
                                 Commands.literal("join")
                                         .then(Commands.argument("name", StringArgumentType.word())
+                                                .suggests(CommandManager::cityJoinCommandSuggest)
                                                 .executes(CommandManager::cityJoinCommandExecute)
                                         )
                         )
                         .executes(CommandManager::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );
-        // TODO: Implement the city command
     }
 
     public static int cityCommandExecute(CommandContext<CommandSourceStack> ctx) {
@@ -48,6 +52,15 @@ public class CommandManager {
             return 1;
         }
         return 0;
+    }
+
+    public static CompletableFuture<Suggestions> cityJoinCommandSuggest(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+        ArrayList<String> actions = new ArrayList<>();
+        City.playerCityHashMap.forEach((player, city) -> {
+            actions.add(city.getName().toLowerCase());
+        });
+        actions.forEach(builder::suggest);
+        return builder.buildFuture();
     }
 
     public static int cityJoinCommandExecute(CommandContext<CommandSourceStack> ctx) {
