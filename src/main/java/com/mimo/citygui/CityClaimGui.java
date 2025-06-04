@@ -19,7 +19,7 @@ import java.util.List;
 public class CityClaimGui extends AbstractInventoryGui {
     private final City playerCity;
     private final Chunk playerChunk;
-    private static final int GRID_SIZE = 5;
+    private static final int GRID_SIZE = 4;
     private static final int CENTER = 2;
 
     public CityClaimGui(Player player) {
@@ -42,7 +42,7 @@ public class CityClaimGui extends AbstractInventoryGui {
         int baseX = playerChunk.getX() - CENTER;
         int baseZ = playerChunk.getZ() - CENTER;
         for (int gridZ = 0; gridZ < GRID_SIZE; gridZ++) {
-            for (int gridX = 0; gridX < GRID_SIZE; gridX++) {
+            for (int gridX = 0; gridX < 5; gridX++) {
                 int chunkX = baseX + gridX;
                 int chunkZ = baseZ + gridZ;
                 int guiX = 2 + gridX;

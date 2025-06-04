@@ -16,7 +16,12 @@ public class CityMainGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        addItem(1, 2, Material.PLAYER_HEAD);
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        head.getItemMeta().displayName(Component.text("Players"));
+        ItemStack claim = new ItemStack(Material.BLACK_BANNER);
+        claim.getItemMeta().displayName(Component.text("Claim"));
+        addItem(1, 2, head);
+        addItem(3, 2, claim);
         for (int i = 0; i < 9; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
             addItem(i, 5, Material.GRAY_STAINED_GLASS_PANE);
@@ -30,6 +35,7 @@ public class CityMainGui extends AbstractInventoryGui {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) event.getWhoClicked().closeInventory();
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) new CityPlayerGui(player).show();
+        if (isItemStackClicked(Material.BLACK_BANNER, event)) new CityClaimGui(player).show();
     }
 
     @Override
