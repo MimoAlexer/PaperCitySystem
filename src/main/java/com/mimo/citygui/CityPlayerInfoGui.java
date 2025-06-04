@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class CityPlayerInfoGui extends AbstractInventoryGui {
+    // TODO: Not working bruh
     private final Player infoPlayer;
 
     public CityPlayerInfoGui(Player player, Player infoPlayer) {

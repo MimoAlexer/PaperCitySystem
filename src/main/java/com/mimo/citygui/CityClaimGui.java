@@ -138,6 +138,7 @@ public class CityClaimGui extends AbstractInventoryGui {
         } else {
             player.sendMessage(Component.text("You don't have permission to claim chunks!"));
         }
+        // TODO: Implement cool Particles or effects at the claimed chunk
     }
 
     @Override
