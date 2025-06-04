@@ -1,6 +1,7 @@
 package com.mimo.commands;
 
 import com.mimo.City;
+import com.mimo.api.gui.GenericConfirmationGui;
 import com.mimo.citygui.CityClaimGui;
 import com.mimo.citygui.CityMainGui;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -11,6 +12,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,16 +57,19 @@ public class CommandManager {
     }
 
     public static CompletableFuture<Suggestions> cityJoinCommandSuggest(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+        // TODO: Implement asking if the player already is in a city and add Conformation Gui
         ArrayList<String> actions = new ArrayList<>();
-        City.playerCityHashMap.forEach((player, city) -> {
-            actions.add(city.getName().toLowerCase());
-        });
+        City.cityArrayList.forEach(city -> actions.add(city.getName()));
         actions.forEach(builder::suggest);
         return builder.buildFuture();
     }
 
     public static int cityJoinCommandExecute(CommandContext<CommandSourceStack> ctx) {
-        // TODO: Implement with the name Argument
+        City.cityArrayList.forEach(city -> {
+            if (ctx.getArgument("name", String.class).equals(city.getName())) {
+                // TODO: Implement city join logic
+            }
+        });
         return 0;
     }
 
@@ -83,11 +88,24 @@ public class CommandManager {
     public static int cityCreateCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getExecutor() instanceof Player player && City.playerCityHashMap.containsKey(player)) {
             player.sendMessage(Component.text("You are already in " + City.getCityByPlayer(player).getName() + "!"));
-            return 1;
+            return 0;
         }
 
         if (ctx.getSource().getExecutor() instanceof Player player) {
-            new City(ctx.getArgument("name", String.class), player);
+            new GenericConfirmationGui(player, Component.text("Confirmation Gui")) {
+                @Override
+                public void onConfirm(InventoryClickEvent event) {
+                    City city = new City(ctx.getArgument("name", String.class), player);
+                    player.sendMessage(Component.text("Successfully created city named" + city.getName() + "!"));
+                    inventory.close();
+                }
+
+                @Override
+                public void onCancel(InventoryClickEvent event) {
+                    inventory.close();
+                }
+            }.show();
+            return 1;
         }
         return 0;
     }

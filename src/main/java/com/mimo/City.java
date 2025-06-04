@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 public class City {
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
+    public static ArrayList<City> cityArrayList = new ArrayList<>();
     public static HashMap<Player, Permissions> playerPermissionsHashMap = new HashMap<>();
     private final List<Chunk> chunks = new ArrayList<>();
     @Setter
@@ -23,8 +24,15 @@ public class City {
     public City(String name, Player owner) {
         this.name = name;
         this.owner = owner;
+        cityArrayList.add(this);
         players.add(owner);
         playerCityHashMap.put(owner, this);
+        Permissions permissions = new Permissions();
+        permissions.setHasBlockBreakPermission(true);
+        permissions.setHasBlockPlacePermission(true);
+        permissions.setHasInteractPermission(true);
+        permissions.setHasClaimPermission(true);
+        playerPermissionsHashMap.put(owner, permissions);
     }
 
     public void addPlayer(Player player) {
