@@ -11,6 +11,7 @@ import java.util.List;
 
 @Getter
 public class City {
+    // TODO: Implement War System very fun O_O
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
     public static ArrayList<City> cityArrayList = new ArrayList<>();
     public static HashMap<Player, Permissions> playerPermissionsHashMap = new HashMap<>();
