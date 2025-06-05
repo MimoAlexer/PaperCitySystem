@@ -96,7 +96,7 @@ public class CommandManager {
                 @Override
                 public void onConfirm(InventoryClickEvent event) {
                     City city = new City(ctx.getArgument("name", String.class), player);
-                    player.sendMessage(Component.text("Successfully created city named" + city.getName() + "!"));
+                    player.sendMessage(Component.text("Successfully created city named " + city.getName() + "!"));
                     inventory.close();
                 }
 

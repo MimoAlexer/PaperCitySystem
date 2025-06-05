@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class CityPlayerInfoGui extends AbstractInventoryGui {
-    // TODO: Not working bruh
     private final Player infoPlayer;
 
     public CityPlayerInfoGui(Player player, Player infoPlayer) {
@@ -20,11 +19,11 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        for (int col = 0; col < 10; col++) {
+        for (int col = 0; col < 9; col++) {
             addItem(col, 0, Material.GRAY_STAINED_GLASS_PANE);
-            addItem(col, 6, Material.GRAY_STAINED_GLASS_PANE);
+            addItem(col, 5, Material.GRAY_STAINED_GLASS_PANE);
         }
-        addItem(8, 6, Material.BARRIER);
+        addItem(8, 5, Material.BARRIER);
         ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         if (meta != null) {

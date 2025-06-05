@@ -48,7 +48,7 @@ public class CityPlayerGui extends AbstractInventoryGui {
             new CityPlayerInfoGui(
                     player,
                     itemStackPlayerHashMap.get(event.getCurrentItem())
-            );
+            ).show();
         }
     }
 
