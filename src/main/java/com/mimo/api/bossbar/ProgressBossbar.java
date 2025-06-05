@@ -1,7 +1,6 @@
 package com.mimo.api.bossbar;
 
 import com.mimo.api.AbstractPersonalBossbar;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -13,7 +12,7 @@ public class ProgressBossbar extends AbstractPersonalBossbar {
     private long remainingTime;
     private Runnable completionAction;
 
-    public ProgressBossbar(Plugin plugin, Component title, BossbarColor color, BossbarStyle style, long duration) {
+    public ProgressBossbar(Plugin plugin, String title, BossbarColor color, BossbarStyle style, long duration) {
         super(title, color, style);
         this.plugin = plugin;
         this.totalTime = duration * 20L;
@@ -22,16 +21,8 @@ public class ProgressBossbar extends AbstractPersonalBossbar {
         startProgress();
     }
 
-    public ProgressBossbar(Plugin plugin, String title, BossbarColor color, BossbarStyle style, long duration) {
-        this(plugin, Component.text(title), color, style, duration);
-    }
-
-    public ProgressBossbar(Plugin plugin, Component title, long duration) {
-        this(plugin, title, BossbarColor.GREEN, BossbarStyle.SOLID, duration);
-    }
-
     public ProgressBossbar(Plugin plugin, String title, long duration) {
-        this(plugin, Component.text(title), duration);
+        this(plugin, title, BossbarColor.GREEN, BossbarStyle.SOLID, duration);
     }
 
     private void startProgress() {
