@@ -39,6 +39,11 @@ public class CommandManager {
                                                 .executes(CommandManager::cityJoinCommandExecute)
                                         )
                         )
+                        .then(
+                                Commands.literal("war")
+                                        .executes(CommandManager::cityWarCommandExecute) // TODO: add more arguments for war commands
+
+                        )
                         .executes(CommandManager::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );
     }
@@ -62,6 +67,10 @@ public class CommandManager {
         City.cityArrayList.forEach(city -> actions.add(city.getName()));
         actions.forEach(builder::suggest);
         return builder.buildFuture();
+    }
+
+    public static int cityWarCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        return 0; // TODO: Implement city war logic
     }
 
     public static int cityJoinCommandExecute(CommandContext<CommandSourceStack> ctx) {

@@ -1,7 +1,10 @@
 package com.mimo;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 
+@Getter
 public class War {
     City attacker;
     City defender;
@@ -13,6 +16,8 @@ public class War {
     public War(City attacker, City defender) {
         this.attacker = attacker;
         this.defender = defender;
+        attacker.wars.add(this);
+        defender.wars.add(this);
     }
 
     public void addAttackerAlly(City ally) {
