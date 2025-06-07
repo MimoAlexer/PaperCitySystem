@@ -14,6 +14,7 @@ public abstract class GenericConfirmationGui extends AbstractInventoryGui {
 
     public GenericConfirmationGui(Player player, Component title) {
         super(player, title);
+        show();
     }
 
     @Override
@@ -45,8 +46,10 @@ public abstract class GenericConfirmationGui extends AbstractInventoryGui {
         boolean isCancel = itemStack.equals(CANCEL_ITEM);
         if (isConfirm) {
             onConfirm(event);
+            inventory.close();
         } else if (isCancel) {
             onCancel(event);
+            inventory.close();
         }
     }
 

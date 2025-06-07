@@ -51,4 +51,11 @@ public class War {
         actions.forEach(builder::suggest);
         return builder.buildFuture();
     }
+
+    public static CompletableFuture<Suggestions> WarCitiesSuggest(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
+        ArrayList<String> actions = new ArrayList<>();
+        City.cityArrayList.forEach(city -> actions.add(city.getName()));
+        actions.forEach(builder::suggest);
+        return builder.buildFuture();
+    }
 }

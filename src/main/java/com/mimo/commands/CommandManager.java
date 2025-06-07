@@ -20,7 +20,7 @@ public class CommandManager {
                         )
                         .then(
                                 Commands.literal("claim")
-                                        .executes(City::cityClaimCommandexecute)
+                                        .executes(City::cityClaimCommandExecute)
                         )
                         .then(
                                 Commands.literal("join")
@@ -40,6 +40,10 @@ public class CommandManager {
                                         })
                                         .then(Commands.argument("wartype", StringArgumentType.word())
                                                 .suggests(War::warTypesSuggest)
+                                        )
+                                        .then(Commands.argument("city", StringArgumentType.word())
+                                                .suggests(War::WarCitiesSuggest)
+                                                .executes(War::cityWarCommandExecute)
                                         )
                         )
                         .executes(City::cityCommandExecute).build(), "Manage Cities", List.of("c")
