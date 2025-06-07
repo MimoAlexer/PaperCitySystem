@@ -47,6 +47,8 @@ public class CitySystem extends JavaPlugin implements Listener {
         }
     }
 
+    // TODO: add more events for wars, claims, etc.
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic

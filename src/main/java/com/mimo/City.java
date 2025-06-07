@@ -21,6 +21,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class City {
+    // TODO: Implement that cities can be lvl up and that players can be kicked
     // TODO: Implement War System very fun O_O
     List<War> wars = new ArrayList<>();
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
