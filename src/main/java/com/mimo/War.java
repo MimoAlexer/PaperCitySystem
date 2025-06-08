@@ -5,6 +5,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -40,7 +41,25 @@ public class War {
     }
 
     public static int cityWarCommandExecute(CommandContext<CommandSourceStack> ctx) {
-        return 0; // TODO: Implement city war logic
+        String warType = ctx.getArgument("wartype", String.class);
+        // TODO: ask if the player is in a city and if the city is at war
+        // TODO: add War GUI
+        // TODO: add conformation GUI
+        switch (warType) {
+            case "tributary":
+                ctx.getSource().getExecutor().sendMessage(Component.text("You have started a tributary war!"));
+                break;
+            case "raid":
+                ctx.getSource().getExecutor().sendMessage(Component.text("You have started a raid war!"));
+                break;
+            case "conquest":
+                ctx.getSource().getExecutor().sendMessage(Component.text("You have started a conquest war!"));
+                break;
+            default:
+                ctx.getSource().getExecutor().sendMessage(Component.text("Unknown war type!"));
+                return 0;
+        }
+        return 0;
     }
 
     public static CompletableFuture<Suggestions> warTypesSuggest(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {

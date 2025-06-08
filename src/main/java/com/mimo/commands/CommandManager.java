@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.List;
 
+// TODO: Enter sounds on click in gui or smt idk
 public class CommandManager {
     public CommandManager(Commands commands) {
         commands.register(
@@ -40,6 +41,10 @@ public class CommandManager {
                                         })
                                         .then(Commands.argument("wartype", StringArgumentType.word())
                                                 .suggests(War::warTypesSuggest)
+                                                .executes(ctx -> {
+                                                    ctx.getSource().getExecutor().sendMessage(Component.text("error: enter an attacker city name"));
+                                                    return 0;
+                                                })
                                         )
                                         .then(Commands.argument("city", StringArgumentType.word())
                                                 .suggests(War::WarCitiesSuggest)
