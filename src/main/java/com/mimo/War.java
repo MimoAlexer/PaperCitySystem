@@ -41,7 +41,16 @@ public class War {
     }
 
     public static int cityWarCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        if(City.playerCityHashMap.get(ctx.getSource().getExecutor()) == null) {
+            ctx.getSource().getExecutor().sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
+            return 0;
+        }
         String warType = ctx.getArgument("wartype", String.class);
+        String cityName = ctx.getArgument("city", String.class);
+        City attackerCity = City.playerCityHashMap.get(ctx.getSource().getExecutor());
+        for(attackerCity.getWars().forEach(war -> {
+           // TODO: Implement, and fix errors, idk i'm too tired for this rn
+        });
         // TODO: ask if the player is in a city and if the city is at war
         // TODO: add War GUI
         // TODO: add conformation GUI
