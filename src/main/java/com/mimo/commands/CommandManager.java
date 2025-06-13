@@ -48,7 +48,7 @@ public class CommandManager {
                                         )
                                         .then(Commands.argument("city", StringArgumentType.word())
                                                 .suggests(War::WarCitiesSuggest)
-                                                .executes(War::cityWarCommandExecute)
+                                                .executes(War::cityStartWarCommandExecute)
                                         )
                         )
                         .executes(City::cityCommandExecute).build(), "Manage Cities", List.of("c")

@@ -1,11 +1,13 @@
 package com.mimo;
 
+import com.mimo.citygui.CityWarGui;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -40,7 +42,7 @@ public class War {
         }
     }
 
-    public static int cityWarCommandExecute(CommandContext<CommandSourceStack> ctx) {
+    public static int cityStartWarCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (City.playerCityHashMap.get(ctx.getSource().getExecutor()) == null) {
             ctx.getSource().getExecutor().sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
             return 0;
@@ -88,5 +90,15 @@ public class War {
         City.cityArrayList.forEach(city -> actions.add(city.getName()));
         actions.forEach(builder::suggest);
         return builder.buildFuture();
+    }
+
+    public static int cityWarCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getExecutor();
+        if (City.playerCityHashMap.get(player) == null) {
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
+            return 0;
+        }
+        new CityWarGui(player);
+        return 0;
     }
 }
