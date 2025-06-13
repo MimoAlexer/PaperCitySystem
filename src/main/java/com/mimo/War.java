@@ -45,15 +45,15 @@ public class War {
             ctx.getSource().getExecutor().sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
             return 0;
         }
-        String warTypeAsString = ctx.getArgument("wartype", String.class);
-        WarTypes warType = WarTypes.getWarType(warTypeAsString);
-        String cityName = ctx.getArgument("city", String.class);
+        WarTypes warType = WarTypes.getWarType(ctx.getArgument("wartype", String.class));
+        City defenderCity = City.playerCityHashMap.get(ctx.getArgument("city", String.class));
         City attackerCity = City.playerCityHashMap.get(ctx.getSource().getExecutor());
-        for (attackerCity.getWars().forEach(war -> {
-            // TODO: Implement, and fix errors, idk i'm too tired for this rn
-        }); ; )
-            ;
-        // TODO: ask if the player is in a city and if the city is at war
+        for (War war : attackerCity.getWars()) {
+            if (war.getDefender().equals(defenderCity) && war.getAttacker().equals(attackerCity)) {
+                ctx.getSource().getExecutor().sendMessage(Component.text("You are already at war with " + defenderCity.getName() + "!"));
+                return 0;
+            }
+        }
         // TODO: add War GUI
         // TODO: add conformation GUI
         switch (warType) {
@@ -63,11 +63,14 @@ public class War {
                 ctx.getSource().getExecutor().sendMessage(Component.text("You have started a raid war!"));
             case WarTypes.CONQUEST:
                 ctx.getSource().getExecutor().sendMessage(Component.text("You have started a conquest war!"));
+                break;
+            case null:
+                ctx.getSource().getExecutor().sendMessage(Component.text("Enter a valid war type!"));
+                break;
             default:
                 ctx.getSource().getExecutor().sendMessage(Component.text("Unknown war type!"));
                 return 0;
         }
-        ;
         return 0;
     }
 
