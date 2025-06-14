@@ -1,7 +1,7 @@
 package com.mimo;
 
 import com.mimo.api.gui.GenericConfirmationGui;
-import com.mimo.citygui.CityWarGui;
+import com.mimo.wargui.CityWarGui;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;

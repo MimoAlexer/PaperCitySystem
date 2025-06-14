@@ -1,6 +1,5 @@
-package com.mimo.citygui;
+package com.mimo.wargui;
 
-import com.mimo.City;
 import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -8,10 +7,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class CityWarGui extends AbstractInventoryGui {
-    // TODO: WIP
-    public CityWarGui(Player player) {
-        super(player, Component.text("Wars of " + City.getCityByPlayer(player).getName() + "!"));
+public class AlliesGui extends AbstractInventoryGui {
+    public AlliesGui(Player player, Component title) {
+        super(player, title);
     }
 
     @Override
