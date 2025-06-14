@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class AlliesGui extends AbstractInventoryGui {
+    // TODO: WIP
     public AlliesGui(Player player, Component title) {
         super(player, title);
     }

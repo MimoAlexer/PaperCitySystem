@@ -10,7 +10,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 
 public class InventoryGuiManager implements Listener {
-
+    //TODO: add sounds for inventory open/close and click
     public InventoryGuiManager(Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
