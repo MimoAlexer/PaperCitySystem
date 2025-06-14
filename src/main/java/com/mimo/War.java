@@ -1,5 +1,6 @@
 package com.mimo;
 
+import com.mimo.api.gui.GenericConfirmationGui;
 import com.mimo.citygui.CityWarGui;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -8,6 +9,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -56,24 +58,27 @@ public class War {
                 return 0;
             }
         }
-        // TODO: add War GUI
-        // TODO: add conformation GUI
-        switch (warType) {
-            case WarTypes.TRIBUTARY:
-                ctx.getSource().getExecutor().sendMessage(Component.text("You have started a tributary war!"));
-            case WarTypes.RAID:
-                ctx.getSource().getExecutor().sendMessage(Component.text("You have started a raid war!"));
-            case WarTypes.CONQUEST:
-                ctx.getSource().getExecutor().sendMessage(Component.text("You have started a conquest war!"));
-                break;
-            case null:
-                ctx.getSource().getExecutor().sendMessage(Component.text("Enter a valid war type!"));
-                break;
-            default:
-                ctx.getSource().getExecutor().sendMessage(Component.text("Unknown war type!"));
-                return 0;
+        if (warType == null) {
+            ctx.getSource().getExecutor().sendMessage(Component.text("Enter a valid war type!"));
+            return 0;
         }
-        return 0;
+        if (warType != WarTypes.RAID && warType != WarTypes.TRIBUTARY && warType != WarTypes.CONQUEST) {
+            ctx.getSource().getExecutor().sendMessage(Component.text("Unknown war type!"));
+            return 0;
+        }
+        new GenericConfirmationGui((Player) ctx.getSource().getExecutor(), Component.text("Are you sure you want to start a " + warType.name() + " war with " + defenderCity.getName() + "?")) {
+            @Override
+            public void onConfirm(InventoryClickEvent event) {
+                new War(attackerCity, defenderCity, warType);
+                player.sendMessage(Component.text("You have started a " + warType.name() + " war with " + defenderCity.getName() + "!"));
+                // TODO: fix and add some more stuff like war gui, war score, etc.
+            }
+
+            @Override
+            public void onCancel(InventoryClickEvent event) {
+                player.sendMessage(Component.text("You have cancelled the war request with " + defenderCity.getName() + "."));
+            }
+        };
     }
 
     public static CompletableFuture<Suggestions> warTypesSuggest(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {

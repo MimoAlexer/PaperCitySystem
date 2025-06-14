@@ -12,4 +12,8 @@ public enum WarTypes {
             return null; // or handle the error as needed
         }
     }
+
+    public String asString() {
+        return this.name();
+    }
 }
