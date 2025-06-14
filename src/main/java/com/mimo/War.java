@@ -66,19 +66,22 @@ public class War {
             ctx.getSource().getExecutor().sendMessage(Component.text("Unknown war type!"));
             return 0;
         }
+        final CompletableFuture<Integer> result = new CompletableFuture<>();
         new GenericConfirmationGui((Player) ctx.getSource().getExecutor(), Component.text("Are you sure you want to start a " + warType.name() + " war with " + defenderCity.getName() + "?")) {
             @Override
             public void onConfirm(InventoryClickEvent event) {
                 new War(attackerCity, defenderCity, warType);
                 player.sendMessage(Component.text("You have started a " + warType.name() + " war with " + defenderCity.getName() + "!"));
-                // TODO: fix and add some more stuff like war gui, war score, etc.
+                result.complete(1);
             }
 
             @Override
             public void onCancel(InventoryClickEvent event) {
                 player.sendMessage(Component.text("You have cancelled the war request with " + defenderCity.getName() + "."));
+                result.complete(0);
             }
         };
+        return result.join();
     }
 
     public static CompletableFuture<Suggestions> warTypesSuggest(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
