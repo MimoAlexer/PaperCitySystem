@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,7 +48,20 @@ public class CitySystem extends JavaPlugin implements Listener {
         }
     }
 
-    // TODO: add more events for wars, claims, etc.
+    // TODO: add more events for wars, claims, etc
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        for (City city : City.playerCityHashMap.values()) {
+            if (!(city.getChunks().equals(event.getClickedBlock().getChunk()))) {
+                return;
+            }
+            if (!(city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).hasInteractPermission)) {
+                player.sendMessage("You don't have permission to interact with blocks in this city!");
+                return;
+            }
+        }
+    }
 
     @Override
     public void onDisable() {
