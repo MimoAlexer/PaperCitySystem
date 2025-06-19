@@ -56,6 +56,7 @@ public class CitySystem extends JavaPlugin implements Listener {
             if (!(city.getChunks().equals(event.getClickedBlock().getChunk()))) {
                 return;
             }
+            // TODO: add that when a city is at war with another city the attacker can open dors and chests
             if (!(city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).hasInteractPermission)) {
                 player.sendMessage("You don't have permission to interact with blocks in this city!");
                 return;
