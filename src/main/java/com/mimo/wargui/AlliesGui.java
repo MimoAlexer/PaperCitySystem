@@ -1,5 +1,6 @@
 package com.mimo.wargui;
 
+import com.mimo.City;
 import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -15,6 +16,9 @@ public class AlliesGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
+        City.getCityByPlayer(player).getWars().forEach(war -> {
+            // TODO
+        });
         return new ItemStack[0];
     }
 

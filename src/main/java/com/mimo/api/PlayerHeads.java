@@ -23,4 +23,17 @@ public class PlayerHeads {
         skull.setItemMeta(skullMeta);
         return skull;
     }
+
+    public static @NotNull ItemStack fromUuid(@NotNull UUID uuid, String name) {
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+        if (Bukkit.getPlayer(uuid) != null) {
+            skullMeta.displayName(Component.text(Objects.requireNonNull(name)));
+        } else {
+            skullMeta.displayName(Component.text(Objects.requireNonNull(Bukkit.getOfflinePlayer(uuid).getName())));
+        }
+        skull.setItemMeta(skullMeta);
+        return skull;
+    }
 }
