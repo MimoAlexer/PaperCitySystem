@@ -116,8 +116,9 @@ public class CityClaimGui extends AbstractInventoryGui {
                 PersistentDataContainer container = clickedItem.getItemMeta().getPersistentDataContainer();
                 NamespacedKey keyX = new NamespacedKey("cityguiplugin", "chunk-x");
                 NamespacedKey keyZ = new NamespacedKey("cityguiplugin", "chunk-z");
-                if (container.has(keyX, PersistentDataType.INTEGER) &&
-                        container.has(keyZ, PersistentDataType.INTEGER)) {
+                if (container.has(keyX, PersistentDataType.INTEGER) && container.has(keyZ, PersistentDataType.INTEGER)) {
+                    if (container.get(keyX, PersistentDataType.INTEGER) == null || container.get(keyZ, PersistentDataType.INTEGER) == null)
+                        return;
                     // Bruh using Containers
                     int chunkX = container.get(keyX, PersistentDataType.INTEGER);
                     int chunkZ = container.get(keyZ, PersistentDataType.INTEGER);
