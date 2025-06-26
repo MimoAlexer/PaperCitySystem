@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class War {
+    // Add that war returns City or smt for CityWarGui
     City attacker;
     City defender;
     ArrayList<City> attackerAllies = new ArrayList<>();
