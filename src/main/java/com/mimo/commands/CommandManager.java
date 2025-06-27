@@ -51,6 +51,7 @@ public class CommandManager {
                                                 .executes(War::cityStartWarCommandExecute)
                                         )
                                 // TODO: add Allies and stuff
+                                // Im still thinking how to do it tho
                         )
                         .executes(City::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );
