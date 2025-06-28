@@ -47,9 +47,11 @@ public class CommandManager {
                                                 })
                                         )
                                         .then(Commands.argument("city", StringArgumentType.word())
-                                                .suggests(War::WarCitiesSuggest)
+                                                .suggests(War::warCitiesSuggest)
                                                 .executes(War::cityStartWarCommandExecute)
                                         )
+                                        .then(Commands.literal("allies"))
+                                        .executes(War::warAlliesCommandExecute)
                                 // TODO: add Allies and stuff
                                 // Im still thinking how to do it tho
                         )

@@ -1,6 +1,7 @@
 package com.mimo;
 
 import com.mimo.api.gui.GenericConfirmationGui;
+import com.mimo.wargui.AlliesGui;
 import com.mimo.wargui.CityWarGui;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -94,7 +95,18 @@ public class War {
         return builder.buildFuture();
     }
 
-    public static CompletableFuture<Suggestions> WarCitiesSuggest(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
+    public static int warAlliesCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getExecutor();
+        if (City.playerCityHashMap.get(player) == null) {
+            assert player != null;
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
+            return 0;
+        }
+        new AlliesGui(player, Component.text("Allies of " + City.getCityByPlayer(player).getName() + "!"));
+        return 0;
+    }
+
+    public static CompletableFuture<Suggestions> warCitiesSuggest(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
         ArrayList<String> actions = new ArrayList<>();
         City.cityArrayList.forEach(city -> actions.add(city.getName()));
         actions.forEach(builder::suggest);
