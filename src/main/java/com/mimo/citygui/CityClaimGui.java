@@ -140,6 +140,7 @@ public class CityClaimGui extends AbstractInventoryGui {
             player.sendMessage(Component.text("You don't have permission to claim chunks!"));
         }
         // TODO: Implement cool Particles or effects at the claimed chunk
+        // Red for enemy cities and green for your own and blue for allies
     }
 
     @Override
