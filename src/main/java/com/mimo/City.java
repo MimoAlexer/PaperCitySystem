@@ -102,6 +102,7 @@ public class City {
                     @Override
                     public void onConfirm(InventoryClickEvent event) {
                         // TODO: add that the owner of the city has to accept the request
+                        // A chat button or a gui idk
                     }
 
                     @Override
