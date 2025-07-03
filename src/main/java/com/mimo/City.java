@@ -32,7 +32,7 @@ public class City {
     private String name;
     @Setter
     private Player owner;
-    private CityTypes cityType = CityTypes.SETTLEMENT;
+    private final CityTypes cityType = CityTypes.SETTLEMENT;
     private final List<Player> players = new ArrayList<>();
 
     public City(String name, Player owner) {
@@ -101,6 +101,7 @@ public class City {
                 new GenericConfirmationGui(player, Component.text("Confirmation Gui")) {
                     @Override
                     public void onConfirm(InventoryClickEvent event) {
+                        // city.addPlayer(player); or smt
                         // TODO: add that the owner of the city has to accept the request
                         // A chat button or a gui idk
                     }
