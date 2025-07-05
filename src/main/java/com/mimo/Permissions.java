@@ -10,4 +10,5 @@ public class Permissions {
     public boolean hasBlockPlacePermission = false;
     public boolean hasInteractPermission = false;
     public boolean hasClaimPermission = false;
+    public boolean hasKickPermission = false;
 }
