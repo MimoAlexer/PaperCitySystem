@@ -24,6 +24,7 @@ public class CitySystem extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        // Add Sound Manager
         getLogger().info("CitySystem has been enabled!");
         LifecycleEventManager<Plugin> manager = this.getLifecycleManager();
         manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
