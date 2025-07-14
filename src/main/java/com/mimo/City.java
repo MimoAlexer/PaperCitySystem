@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 public class City {
     // TODO: Implement that cities can be lvl up and that players can be kicked
     // TODO: Implement War System very fun O_O
+    // TODO: Able to save the Items in right order for the Treasure Chamber
     List<War> wars = new ArrayList<>();
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
     public static ArrayList<City> cityArrayList = new ArrayList<>();

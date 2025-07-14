@@ -11,4 +11,5 @@ public class Permissions {
     public boolean hasInteractPermission = false;
     public boolean hasClaimPermission = false;
     public boolean hasKickPermission = false;
+    public boolean hasTreasureChamberPermission = false;
 }
