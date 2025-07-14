@@ -24,6 +24,7 @@ public class City {
     // TODO: Implement that cities can be lvl up and that players can be kicked
     // TODO: Implement War System very fun O_O
     // TODO: Able to save the Items in right order for the Treasure Chamber
+    // Is there an Inventory Object that can be saved and loaded?
     List<War> wars = new ArrayList<>();
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
     public static ArrayList<City> cityArrayList = new ArrayList<>();
