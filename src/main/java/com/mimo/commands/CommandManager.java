@@ -31,6 +31,10 @@ public class CommandManager {
                                         )
                         )
                         .then(
+                                Commands.literal("schatzkammer")
+                                        .executes(City::citySchatzkammerCommandExecute)
+                        )
+                        .then(
                                 Commands.literal("war")
                                         .executes(War::cityWarCommandExecute)
                                         .then(
