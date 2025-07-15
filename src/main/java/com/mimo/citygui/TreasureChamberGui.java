@@ -22,7 +22,7 @@ public class TreasureChamberGui extends AbstractInventoryGui {
 
     @Override
     protected void clickCallback(InventoryClickEvent event) {
-
+        // check if the member is still a member else cancel event and close Inventory
     }
 
     @Override
