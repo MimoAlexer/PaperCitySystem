@@ -3,6 +3,7 @@ package com.mimo;
 import com.mimo.api.gui.GenericConfirmationGui;
 import com.mimo.citygui.CityClaimGui;
 import com.mimo.citygui.CityMainGui;
+import com.mimo.citygui.TreasureChamber;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -36,6 +37,7 @@ public class City {
     private Player owner;
     private final CityTypes cityType = CityTypes.SETTLEMENT;
     private final List<Player> players = new ArrayList<>();
+    private final TreasureChamber treasureChamber;
 
     public City(String name, Player owner) {
         this.name = name;
@@ -49,6 +51,7 @@ public class City {
         permissions.setHasInteractPermission(true);
         permissions.setHasClaimPermission(true);
         playerPermissionsHashMap.put(owner, permissions);
+        this.treasureChamber = new TreasureChamber();
     }
 
     public void addPlayer(Player player) {
@@ -72,6 +75,10 @@ public class City {
 
     public static City getCityByPlayer(Player player) {
         return playerCityHashMap.get(player);
+    }
+
+    public TreasureChamber getTreasureChamber() {
+        return treasureChamber;
     }
 
 
