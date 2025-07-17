@@ -14,7 +14,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -42,6 +41,8 @@ public class City {
     private final CityTypes cityType = CityTypes.SETTLEMENT;
     private final List<Player> players = new ArrayList<>();
     private final TreasureChamber treasureChamber;
+    @Setter
+    private int exp = 0;
 
     // Store pending join requests for offline owners
     private static final Set<PendingJoinRequest> pendingJoinRequests = new HashSet<>();
@@ -97,6 +98,13 @@ public class City {
         return treasureChamber;
     }
 
+    public CityTypes getCurrentCityType() {
+        if (exp >= 4000) return CityTypes.CITY;
+        if (exp >= 2000) return CityTypes.TOWN;
+        if (exp >= 1000) return CityTypes.VILLAGE;
+        if (exp >= 500) return CityTypes.HAMLET;
+        return CityTypes.SETTLEMENT;
+    }
 
     public static int cityCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getExecutor() instanceof Player player) {
