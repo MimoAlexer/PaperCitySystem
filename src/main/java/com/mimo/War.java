@@ -46,6 +46,7 @@ public class War {
         }
     }
 
+    @SuppressWarnings("unlikely-arg-type")
     public static int cityStartWarCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (City.playerCityHashMap.get(ctx.getSource().getExecutor()) == null) {
             ctx.getSource().getExecutor().sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));

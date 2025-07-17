@@ -3,17 +3,13 @@ package com.mimo.citygui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import com.mimo.City;
-
-import java.util.HashMap;
-import java.util.Map;
+import net.kyori.adventure.text.Component;
 
 public class TreasureChamber{
-    private static Player staticPlayer;
+    @SuppressWarnings("unused")
+    private static Player staticPlayer; //maybe i can be usedin sometime
     private static final int SIZE = 6 * 9; // 6 rows, 9 columns
-    private static final String TITLE = "Treasure Chamber of " + City.getCityByPlayer(staticPlayer).getName();
+    private static final Component TITLE = Component.text("Treasure Chamber");
     private final Inventory inventory;
 
     public TreasureChamber() {

@@ -88,7 +88,6 @@ public class City {
                 player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
                 return 0;
             }
-            City city = City.getCityByPlayer(player);
             new CityMainGui(player).show();
             return 1;
         }
