@@ -11,6 +11,10 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,13 +23,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 public class City {
     // TODO: Implement that cities can be lvl up and that players can be kicked
     // TODO: Implement War System very fun O_O
-    // TODO: Able to save the Items in right order for the Treasure Chamber
-    // Is there an Inventory Object that can be saved and loaded?
     List<War> wars = new ArrayList<>();
     public static HashMap<Player, City> playerCityHashMap = new HashMap<>();
     public static ArrayList<City> cityArrayList = new ArrayList<>();
@@ -38,6 +42,18 @@ public class City {
     private final CityTypes cityType = CityTypes.SETTLEMENT;
     private final List<Player> players = new ArrayList<>();
     private final TreasureChamber treasureChamber;
+
+    // Store pending join requests for offline owners
+    private static final Set<PendingJoinRequest> pendingJoinRequests = new HashSet<>();
+
+    private static class PendingJoinRequest {
+        public final Player requester;
+        public final City city;
+        public PendingJoinRequest(Player requester, City city) {
+            this.requester = requester;
+            this.city = city;
+        }
+    }
 
     public City(String name, Player owner) {
         this.name = name;
@@ -106,22 +122,63 @@ public class City {
         }
         City.cityArrayList.forEach(city -> {
             if (ctx.getArgument("name", String.class).equals(city.getName())) {
-                new GenericConfirmationGui(player, Component.text("Confirmation Gui")) {
-                    @Override
-                    public void onConfirm(InventoryClickEvent event) {
-                        // city.addPlayer(player); or smt
-                        // TODO: add that the owner of the city has to accept the request
-                        // A chat button or a gui idk
-                    }
-
-                    @Override
-                    public void onCancel(InventoryClickEvent event) {
-                        inventory.close();
-                    }
-                };
+                Player owner = city.getOwner();
+                if (owner.isOnline()) {
+                    Component joinMsg = Component.text(player.getName() + " wants to join your city! ")
+                        .append(Component.text("[Review]", net.kyori.adventure.text.format.NamedTextColor.GREEN)
+                            .hoverEvent(HoverEvent.showText(Component.text("Click to review join request")))
+                            .clickEvent(ClickEvent.runCommand("/city reviewjoin " + player.getName() + " " + city.getName())));
+                    owner.sendMessage(joinMsg);
+                    player.sendMessage(Component.text("Join request sent to the city owner!"));
+                } else {
+                    pendingJoinRequests.add(new PendingJoinRequest(player, city));
+                    player.sendMessage(Component.text("The city owner is offline. They will be notified when they come online."));
+                }
             }
         });
         return 0;
+    }
+
+    public static void notifyOwnerOnLogin(Player owner) {
+        pendingJoinRequests.removeIf(req -> {
+            if (req.city.getOwner().equals(owner)) {
+                Component joinMsg = Component.text(req.requester.getName() + " wanted to join your city while you were offline. ")
+                    .append(Component.text("[Review]", net.kyori.adventure.text.format.NamedTextColor.GREEN)
+                        .hoverEvent(HoverEvent.showText(Component.text("Click to review join request")))
+                        .clickEvent(ClickEvent.runCommand("/city reviewjoin " + req.requester.getName() + " " + req.city.getName())));
+                owner.sendMessage(joinMsg);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public static int reviewJoinCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        String playerName = ctx.getArgument("player", String.class);
+        String cityName = ctx.getArgument("city", String.class);
+        Player owner = (Player) ctx.getSource().getExecutor();
+        Player requester = Bukkit.getPlayerExact(playerName);
+        City city = City.cityArrayList.stream().filter(c -> c.getName().equals(cityName)).findFirst().orElse(null);
+        if (city == null || requester == null) {
+            owner.sendMessage(Component.text("Invalid join request."));
+            return 0;
+        }
+        new GenericConfirmationGui(owner, Component.text("Accept " + requester.getName() + " into your city?")) {
+            @Override
+            public void onConfirm(InventoryClickEvent event) {
+                city.addPlayer(requester);
+                owner.sendMessage(Component.text("You accepted " + requester.getName() + " into your city!"));
+                requester.sendMessage(Component.text("You have been accepted into " + city.getName() + "!"));
+                inventory.close();
+            }
+            @Override
+            public void onCancel(InventoryClickEvent event) {
+                owner.sendMessage(Component.text("You declined " + requester.getName() + "'s join request."));
+                requester.sendMessage(Component.text("Your join request to " + city.getName() + " was declined."));
+                inventory.close();
+            }
+        };
+        return 1;
     }
 
     public static int cityClaimCommandExecute(CommandContext<CommandSourceStack> ctx) {
