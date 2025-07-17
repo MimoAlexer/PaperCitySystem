@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -76,4 +77,12 @@ public abstract class AbstractInventoryGui implements InventoryHolder {
     protected abstract void clickCallback(InventoryClickEvent event);
 
     protected abstract void inventoryCloseCallback(InventoryCloseEvent event);
+
+    protected void playClickSound(InventoryClickEvent event, Material clickedMaterial) {
+        if (clickedMaterial == Material.BARRIER) {
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f); //TODO: if you play the sound at the Players location, will it be played for everyone else near the player?
+        } else {
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+    }
 }

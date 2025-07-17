@@ -5,6 +5,7 @@ import com.mimo.api.PlayerHeads;
 import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -43,11 +44,16 @@ public class CityPlayerGui extends AbstractInventoryGui {
     @Override
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
-        if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
+        if (isItemStackClicked(Material.BARRIER, event)) {
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f); //TODO: if you play the sound at the players location does it player for other Players too?
+            new CityMainGui(player).show();
+            return;
+        }
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) {
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             new CityPlayerInfoGui(
-                    player,
-                    itemStackPlayerHashMap.get(event.getCurrentItem())
+                player,
+                itemStackPlayerHashMap.get(event.getCurrentItem())
             ).show();
         }
     }
