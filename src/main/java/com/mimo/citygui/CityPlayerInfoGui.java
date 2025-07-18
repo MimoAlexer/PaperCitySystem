@@ -70,7 +70,9 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
                 Component.text("Interact: " + perms.hasInteractPermission),
                 Component.text("Claim: " + perms.hasClaimPermission),
                 Component.text("Kick: " + perms.hasKickPermission),
-                Component.text("Treasure Chamber: " + perms.hasTreasureChamberPermission)
+                Component.text("Treasure Chamber: " + perms.hasTreasureChamberPermission),
+                Component.text(""),
+                Component.text("Can be changed by someone with editpermission.")
             ));
             permBook.setItemMeta(permMeta);
         }
@@ -100,6 +102,19 @@ public class CityPlayerInfoGui extends AbstractInventoryGui {
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
+        // Allow editing permissions if the viewer has the right
+        if (isItemStackClicked(Material.BOOK, event)) {
+            City city = City.getCityByPlayer(infoPlayer);
+            if (city != null) {
+                Permissions viewerPerms = City.playerPermissionsHashMap.get(player);
+                // Let's assume hasKickPermission means can edit others' permissions (customize as needed)
+                if (viewerPerms != null && viewerPerms.hasKickPermission) {
+                    new PermissionEditGui(player, infoPlayer).show();
+                } else {
+                    player.sendMessage("You do not have permission to edit this player's permissions.");
+                }
+            }
+        }
     }
 
     @Override
