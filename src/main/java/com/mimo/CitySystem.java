@@ -41,27 +41,46 @@ public class CitySystem extends JavaPlugin implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         for (City city : City.playerCityHashMap.values()) {
-            if (!(city.getChunks().equals(event.getBlock().getChunk()))) {
-                return;
+            if (!city.getChunks().contains(event.getBlock().getChunk())) {
+                continue;
             }
-            if (!(city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).hasBlockBreakPermission)) {
+            boolean canBreak = city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).hasBlockBreakPermission;
+            boolean isAttacker = false;
+            for (War war : city.getWars()) {
+                if (war.getAttacker().getPlayers().contains(player) && war.getDefender().equals(city)) {
+                    isAttacker = true;
+                    break;
+                }
+            }
+            if (!(canBreak || isAttacker)) {
                 player.sendMessage("You don't have permission to break blocks in this city!");
+                event.setCancelled(true);
                 return;
             }
         }
     }
 
-    // TODO: add more events for wars, claims, etc
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        if (event.getClickedBlock() == null) return;
         for (City city : City.playerCityHashMap.values()) {
-            if (!(city.getChunks().equals(event.getClickedBlock().getChunk()))) {
-                return;
+            if (!city.getChunks().contains(event.getClickedBlock().getChunk())) {
+                continue;
             }
-            // TODO: add that when a city is at war with another city the attacker can open dors and chests
-            if (!(city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).hasInteractPermission)) {
+            boolean canInteract = city.getPlayers().contains(player) && City.playerPermissionsHashMap.get(player).hasInteractPermission;
+            boolean isAttacker = false;
+            for (War war : city.getWars()) {
+                if (war.getAttacker().getPlayers().contains(player) && war.getDefender().equals(city)) {
+                    isAttacker = true;
+                    break;
+                }
+            }
+            org.bukkit.Material type = event.getClickedBlock().getType();
+            boolean isSpecialBlock = type.name().endsWith("_DOOR") || type.name().endsWith("_TRAPDOOR") || type.name().endsWith("_FENCE_GATE") || type.name().endsWith("_CHEST") || type.name().equals("BARREL") || type.name().equals("ENDER_CHEST") || type.name().equals("TRAPPED_CHEST");
+            if (!(canInteract || (isAttacker && isSpecialBlock))) {
                 player.sendMessage("You don't have permission to interact with blocks in this city!");
+                event.setCancelled(true);
                 return;
             }
         }
