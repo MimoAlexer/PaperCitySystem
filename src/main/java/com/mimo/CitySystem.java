@@ -13,6 +13,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class CitySystem extends JavaPlugin implements Listener {
     public static CitySystem INSTANCE = null;
@@ -53,7 +55,7 @@ public class CitySystem extends JavaPlugin implements Listener {
                 }
             }
             if (!(canBreak || isAttacker)) {
-                player.sendMessage("You don't have permission to break blocks in this city!");
+                player.sendMessage(Component.text("You don't have permission to break blocks in this city!", NamedTextColor.RED));
                 event.setCancelled(true);
                 return;
             }
@@ -79,7 +81,7 @@ public class CitySystem extends JavaPlugin implements Listener {
             org.bukkit.Material type = event.getClickedBlock().getType();
             boolean isSpecialBlock = type.name().endsWith("_DOOR") || type.name().endsWith("_TRAPDOOR") || type.name().endsWith("_FENCE_GATE") || type.name().endsWith("_CHEST") || type.name().equals("BARREL") || type.name().equals("ENDER_CHEST") || type.name().equals("TRAPPED_CHEST");
             if (!(canInteract || (isAttacker && isSpecialBlock))) {
-                player.sendMessage("You don't have permission to interact with blocks in this city!");
+                player.sendMessage(Component.text("You don't have permission to interact with blocks in this city!", NamedTextColor.RED));
                 event.setCancelled(true);
                 return;
             }

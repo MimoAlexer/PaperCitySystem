@@ -31,8 +31,6 @@ class PermissionEditGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
-        // Layout: 1 row, each permission as a toggleable item
-        // 0: Back, 2-7: Permissions
         addItem(0, 2, Material.BARRIER);
         addPermissionToggle(2, "Block Break", perms.hasBlockBreakPermission, Material.IRON_PICKAXE);
         addPermissionToggle(3, "Block Place", perms.hasBlockPlacePermission, Material.GRASS_BLOCK);
@@ -65,7 +63,6 @@ class PermissionEditGui extends AbstractInventoryGui {
             new CityPlayerInfoGui(editor, targetPlayer).show();
             return;
         }
-        // Toggle permissions
         boolean changed = false;
         if (type == Material.IRON_PICKAXE) {
             perms.hasBlockBreakPermission = !perms.hasBlockBreakPermission;
@@ -88,12 +85,12 @@ class PermissionEditGui extends AbstractInventoryGui {
         }
         if (changed) {
             City.playerPermissionsHashMap.put(targetPlayer, perms);
-            show(); // Refresh GUI
+            show();
         }
     }
 
     @Override
     protected void inventoryCloseCallback(InventoryCloseEvent event) {
-        // No action needed
+        
     }
 }
