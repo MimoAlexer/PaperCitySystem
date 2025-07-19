@@ -4,6 +4,8 @@ import com.mimo.City;
 import com.mimo.War;
 import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -51,7 +53,16 @@ public class AlliesGui extends AbstractInventoryGui {
         }
         // Add invite button
         ItemStack invite = new ItemStack(Material.EMERALD);
+        // Why Emerald?
+        // Because...
         ItemMeta meta = invite.getItemMeta();
+        // BILL WE NEED A CAAAAR
+        // I watched game of thrones and I know that the car is a symbol of power
+        // and I know that the emerald is a symbol of power
+        // and I know that the emerald is a symbol of power
+        // this is kinda Schizophrenic XD
+        // But the car line is from the last of us
+        // (kinda)
         meta.displayName(Component.text("Invite new ally", net.kyori.adventure.text.format.NamedTextColor.AQUA));
         invite.setItemMeta(meta);
         results.add(invite);
@@ -65,7 +76,10 @@ public class AlliesGui extends AbstractInventoryGui {
         if (clicked == null || clicked.getType() == Material.AIR) return;
         if (clicked.getType() == Material.PAPER) {
             // Remove ally
-            String name = clicked.getItemMeta().getDisplayName().replace("Ally: ", "");
+            ItemMeta meta = clicked.getItemMeta();
+            String display = meta != null && meta.displayName() != null ? PlainTextComponentSerializer.plainText().serialize(meta.displayName()) : "";
+            // I like serializing its kinda cool
+            String name = display.replace("Ally: ", "");
             City toRemove = City.cityArrayList.stream().filter(c -> c.getName().equals(name)).findFirst().orElse(null);
             if (toRemove != null) {
                 war.getAttackerAllies().remove(toRemove);
