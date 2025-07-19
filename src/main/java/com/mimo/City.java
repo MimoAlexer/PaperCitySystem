@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.HashSet;
 import java.util.Set;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 @Getter
 public class City {
@@ -108,39 +109,37 @@ public class City {
 
     public static int cityCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getExecutor() instanceof Player player) {
-            if (!(City.playerCityHashMap.containsKey(player))) {
-                player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>"));
-                return 0;
-            }
-            new CityMainGui(player).show();
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>", NamedTextColor.YELLOW));
+            return 0;
+        } else {
+            new CityMainGui((Player) ctx.getSource().getExecutor()).show();
             return 1;
         }
-        return 0;
+        // unreachable
     }
 
     public static int cityJoinCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getExecutor() instanceof Player player) {
             if (City.playerCityHashMap.containsKey(player)) {
-                player.sendMessage(Component.text("You are already in " + City.getCityByPlayer(player).getName() + "!"));
+                player.sendMessage(Component.text("You are already in " + City.getCityByPlayer(player).getName() + "!", NamedTextColor.YELLOW));
                 return 0;
             }
         } else {
-            ctx.getSource().getExecutor().sendMessage(Component.text("This command can only be executed by a player!"));
+            ctx.getSource().getExecutor().sendMessage(Component.text("This command can only be executed by a player!", NamedTextColor.RED));
             return 0;
         }
         City.cityArrayList.forEach(city -> {
             if (ctx.getArgument("name", String.class).equals(city.getName())) {
                 Player owner = city.getOwner();
                 if (owner.isOnline()) {
-                    Component joinMsg = Component.text(player.getName() + " wants to join your city! ")
-                        .append(Component.text("[Review]", net.kyori.adventure.text.format.NamedTextColor.GREEN)
-                            .hoverEvent(HoverEvent.showText(Component.text("Click to review join request")))
+                    Component joinMsg = Component.text(player.getName() + " wants to join your city! ", NamedTextColor.AQUA)
+                        .append(Component.text("[Review]", NamedTextColor.GREEN)
+                            .hoverEvent(HoverEvent.showText(Component.text("Click to review join request", NamedTextColor.YELLOW)))
                             .clickEvent(ClickEvent.runCommand("/city reviewjoin " + player.getName() + " " + city.getName())));
                     owner.sendMessage(joinMsg);
-                    player.sendMessage(Component.text("Join request sent to the city owner!"));
                 } else {
                     pendingJoinRequests.add(new PendingJoinRequest(player, city));
-                    player.sendMessage(Component.text("The city owner is offline. They will be notified when they come online."));
+                    player.sendMessage(Component.text("The city owner is offline. They will be notified when they come online.", NamedTextColor.YELLOW));
                 }
             }
         });
@@ -150,9 +149,9 @@ public class City {
     public static void notifyOwnerOnLogin(Player owner) {
         pendingJoinRequests.removeIf(req -> {
             if (req.city.getOwner().equals(owner)) {
-                Component joinMsg = Component.text(req.requester.getName() + " wanted to join your city while you were offline. ")
-                    .append(Component.text("[Review]", net.kyori.adventure.text.format.NamedTextColor.GREEN)
-                        .hoverEvent(HoverEvent.showText(Component.text("Click to review join request")))
+                Component joinMsg = Component.text(req.requester.getName() + " wanted to join your city while you were offline. ", NamedTextColor.AQUA)
+                    .append(Component.text("[Review]", NamedTextColor.GREEN)
+                        .hoverEvent(HoverEvent.showText(Component.text("Click to review join request", NamedTextColor.YELLOW)))
                         .clickEvent(ClickEvent.runCommand("/city reviewjoin " + req.requester.getName() + " " + req.city.getName())));
                 owner.sendMessage(joinMsg);
                 return true;
@@ -168,21 +167,21 @@ public class City {
         Player requester = Bukkit.getPlayerExact(playerName);
         City city = City.cityArrayList.stream().filter(c -> c.getName().equals(cityName)).findFirst().orElse(null);
         if (city == null || requester == null) {
-            owner.sendMessage(Component.text("Invalid join request."));
+            owner.sendMessage(Component.text("Invalid join request.", NamedTextColor.RED));
             return 0;
         }
-        new GenericConfirmationGui(owner, Component.text("Accept " + requester.getName() + " into your city?")) {
+        new GenericConfirmationGui(owner, Component.text("Accept " + requester.getName() + " into your city?", NamedTextColor.AQUA)) {
             @Override
             public void onConfirm(InventoryClickEvent event) {
                 city.addPlayer(requester);
-                owner.sendMessage(Component.text("You accepted " + requester.getName() + " into your city!"));
-                requester.sendMessage(Component.text("You have been accepted into " + city.getName() + "!"));
+                owner.sendMessage(Component.text("You accepted " + requester.getName() + " into your city!", NamedTextColor.GREEN));
+                requester.sendMessage(Component.text("You have been accepted into " + city.getName() + "!", NamedTextColor.GREEN));
                 inventory.close();
             }
             @Override
             public void onCancel(InventoryClickEvent event) {
-                owner.sendMessage(Component.text("You declined " + requester.getName() + "'s join request."));
-                requester.sendMessage(Component.text("Your join request to " + city.getName() + " was declined."));
+                owner.sendMessage(Component.text("You declined " + requester.getName() + "'s join request.", NamedTextColor.YELLOW));
+                requester.sendMessage(Component.text("Your join request to " + city.getName() + " was declined.", NamedTextColor.RED));
                 inventory.close();
             }
         };
@@ -191,30 +190,27 @@ public class City {
 
     public static int cityClaimCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getExecutor() instanceof Player player) {
-            if (!(City.playerCityHashMap.containsKey(player))) {
-                player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>."));
-                return 0;
-            }
-            new CityClaimGui(player).show();
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>.", NamedTextColor.YELLOW));
+            return 0;
+        } else {
+            new CityClaimGui((Player) ctx.getSource().getExecutor()).show();
             return 1;
         }
-        return 0;
+        // unreachable
     }
 
     public static int cityCreateCommandExecute(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getExecutor() instanceof Player player && City.playerCityHashMap.containsKey(player)) {
-            player.sendMessage(Component.text("You are already in " + City.getCityByPlayer(player).getName() + "!"));
+            player.sendMessage(Component.text("You are already in " + City.getCityByPlayer(player).getName() + "!", NamedTextColor.YELLOW));
             return 0;
         }
-
         if (ctx.getSource().getExecutor() instanceof Player player) {
-            new GenericConfirmationGui(player, Component.text("Confirmation Gui")) {
+            new GenericConfirmationGui(player, Component.text("Confirmation Gui", NamedTextColor.AQUA)) {
                 @Override
                 public void onConfirm(InventoryClickEvent event) {
                     City city = new City(ctx.getArgument("name", String.class), player);
-                    player.sendMessage(Component.text("Successfully created city named " + city.getName() + "!"));
+                    player.sendMessage(Component.text("Successfully created city named " + city.getName() + "!", NamedTextColor.GREEN));
                 }
-
                 @Override
                 public void onCancel(InventoryClickEvent event) {
                 }
