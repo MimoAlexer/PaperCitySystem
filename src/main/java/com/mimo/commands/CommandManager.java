@@ -11,6 +11,7 @@ import java.util.List;
 // TODO: Enter sounds on click in gui or smt idk
 public class CommandManager {
     public CommandManager(Commands commands) {
+        // WOOOOOOW BRIGADIER IS SOO COOL!!!!!
         commands.register(
                 Commands.literal("city")
                         .then(
@@ -36,13 +37,13 @@ public class CommandManager {
                                         .then(
                                                 Commands.literal("start")
                                         ).executes(ctx -> {
-                                            ctx.getSource().getExecutor().sendMessage(Component.text("error: enter in this format: /city war start <war type> <city>"));
+                                            ctx.getSource().getExecutor().sendMessage(Component.text("error: enter in this format: /city war start <war type> <city>", net.kyori.adventure.text.format.NamedTextColor.RED));
                                             return 0;
                                         })
                                         .then(Commands.argument("wartype", StringArgumentType.word())
                                                 .suggests(War::warTypesSuggest)
                                                 .executes(ctx -> {
-                                                    ctx.getSource().getExecutor().sendMessage(Component.text("error: enter an attacker city name"));
+                                                    ctx.getSource().getExecutor().sendMessage(Component.text("error: enter an attacker city name", net.kyori.adventure.text.format.NamedTextColor.RED));
                                                     return 0;
                                                 })
                                         )
@@ -52,8 +53,25 @@ public class CommandManager {
                                         )
                                         .then(Commands.literal("allies"))
                                         .executes(War::warAlliesCommandExecute)
-                                // TODO: add Allies and stuff
-                                // Im still thinking how to do it tho
+                                        .then(Commands.literal("inviteally")
+                                                .then(Commands.argument("city", StringArgumentType.word())
+                                                        .suggests(War::warCitiesSuggest)
+                                                        .executes(War::warInviteAllyCommandExecute)
+                                                )
+                                        )
+                                        .then(Commands.literal("removeally")
+                                                .then(Commands.argument("city", StringArgumentType.word())
+                                                        .suggests(War::warCitiesSuggest)
+                                                        .executes(War::warRemoveAllyCommandExecute)
+                                                )
+                                        )
+                                        .then(Commands.literal("list")
+                                                .executes(War::warListCommandExecute)
+                                        )
+                                        .then(Commands.literal("enemies")
+                                                .executes(War::warEnemiesCommandExecute)
+                                        )
+                                // Allies and stuff fully implemented
                         )
                         .executes(City::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );

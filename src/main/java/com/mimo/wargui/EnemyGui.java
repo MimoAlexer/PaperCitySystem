@@ -22,21 +22,24 @@ public class EnemyGui extends AbstractInventoryGui {
     @Override
     protected ItemStack[] items() {
         List<ItemStack> results = new ArrayList<>();
-        for (War war : City.getCityByPlayer(player).getWars()) {
-            for (City ally : war.getDefenderAllies()) {
-                ItemStack item = new ItemStack(Material.PAPER);
-                ItemMeta meta = item.getItemMeta();
-                meta.displayName(Component.text(ally.getName()));
-                item.setItemMeta(meta);
-                results.add(item);
-            }
+        City city = City.getCityByPlayer(player);
+        if (city == null || city.getWars().isEmpty()) return results.toArray(new ItemStack[0]);
+        War war = city.getWars().get(0);
+        for (City enemy : war.getDefenderAllies()) {
+            ItemStack item = new ItemStack(Material.PAPER);
+            ItemMeta meta = item.getItemMeta();
+            meta.displayName(Component.text("Enemy: " + enemy.getName(), net.kyori.adventure.text.format.NamedTextColor.RED));
+            meta.lore(List.of(Component.text("Click for info", net.kyori.adventure.text.format.NamedTextColor.GRAY)));
+            item.setItemMeta(meta);
+            results.add(item);
         }
         return results.toArray(new ItemStack[0]);
     }
 
     @Override
     protected void clickCallback(InventoryClickEvent event) {
-
+        event.setCancelled(true);
+        // Could show more info about the enemy city here
     }
 
     @Override

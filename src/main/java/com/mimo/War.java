@@ -22,6 +22,7 @@ public class War {
     City defender;
     ArrayList<City> attackerAllies = new ArrayList<>();
     ArrayList<City> defenderAllies = new ArrayList<>();
+    private final java.util.HashSet<City> pendingAllyInvites = new java.util.HashSet<>();
     WarTypes warType;
     int attackerScore = 0;
     int defenderScore = 0;
@@ -44,6 +45,10 @@ public class War {
         if (!defenderAllies.contains(ally)) {
             defenderAllies.add(ally);
         }
+    }
+
+    public java.util.HashSet<City> getPendingAllyInvites() {
+        return pendingAllyInvites;
     }
 
     @SuppressWarnings("unlikely-arg-type")
@@ -121,6 +126,27 @@ public class War {
             return 0;
         }
         new CityWarGui(player);
+        return 0;
+    }
+
+    public static int warInviteAllyCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getExecutor();
+        player.sendMessage(Component.text("[WIP] Use this to invite an ally to your war.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        return 0;
+    }
+    public static int warRemoveAllyCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getExecutor();
+        player.sendMessage(Component.text("[WIP] Use this to remove an ally from your war.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        return 0;
+    }
+    public static int warListCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getExecutor();
+        player.sendMessage(Component.text("[WIP] Use this to list all current wars.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        return 0;
+    }
+    public static int warEnemiesCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getExecutor();
+        player.sendMessage(Component.text("[WIP] Use this to view all enemies/defender allies.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
         return 0;
     }
 }
