@@ -3,6 +3,7 @@ package com.mimo;
 import com.mimo.api.gui.GenericConfirmationGui;
 import com.mimo.wargui.AlliesGui;
 import com.mimo.wargui.CityWarGui;
+import com.mimo.wargui.EnemyGui;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -274,17 +275,103 @@ public class War {
     }
     public static int warRemoveAllyCommandExecute(CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
-        player.sendMessage(Component.text("[WIP] Use this to remove an ally from your war.", NamedTextColor.YELLOW));
-        return 0;
+        if (City.playerCityHashMap.get(player) == null) {
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>", NamedTextColor.RED));
+            return 0;
+        }
+        
+        String targetCityName = ctx.getArgument("city", String.class);
+        City playerCity = City.getCityByPlayer(player);
+        City targetCity = City.cityArrayList.stream().filter(c -> c.getName().equals(targetCityName)).findFirst().orElse(null);
+        
+        if (targetCity == null) {
+            player.sendMessage(Component.text("City " + targetCityName + " does not exist!", NamedTextColor.RED));
+            return 0;
+        }
+        
+        War war = playerCity.getWars().stream()
+            .filter(w -> w.getAttacker().equals(playerCity))
+            .findFirst()
+            .orElse(null);
+            
+        if (war == null) {
+            player.sendMessage(Component.text("You need to be in a war as the attacker to remove allies!", NamedTextColor.RED));
+            return 0;
+        }
+        
+        if (!war.getAttackerAllies().contains(targetCity)) {
+            player.sendMessage(Component.text(targetCity.getName() + " is not your ally in this war!", NamedTextColor.YELLOW));
+            return 0;
+        }
+        
+        war.getAttackerAllies().remove(targetCity);
+        player.sendMessage(Component.text("Removed " + targetCity.getName() + " as an ally!", NamedTextColor.GREEN));
+        
+        Player targetOwner = targetCity.getOwner();
+        if (targetOwner.isOnline()) {
+            targetOwner.sendMessage(Component.text(playerCity.getName() + " has removed your city as an ally in their war against " + war.getDefender().getName() + ".", NamedTextColor.RED));
+        }
+        
+        return 1;
     }
+    
     public static int warListCommandExecute(CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
-        player.sendMessage(Component.text("[WIP] Use this to list all current wars.", NamedTextColor.YELLOW));
-        return 0;
+        if (City.playerCityHashMap.get(player) == null) {
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>", NamedTextColor.RED));
+            return 0;
+        }
+        
+        City playerCity = City.getCityByPlayer(player);
+        if (playerCity.getWars().isEmpty()) {
+            player.sendMessage(Component.text("Your city is not currently involved in any wars.", NamedTextColor.YELLOW));
+            return 0;
+        }
+        
+        player.sendMessage(Component.text("=== Wars for " + playerCity.getName() + " ===", NamedTextColor.GOLD));
+        
+        for (War war : playerCity.getWars()) {
+            String role = war.getAttacker().equals(playerCity) ? "Attacker" : "Defender";
+            String opponent = war.getAttacker().equals(playerCity) ? war.getDefender().getName() : war.getAttacker().getName();
+            
+            player.sendMessage(Component.text("• " + war.getWarType().name() + " War vs " + opponent + " (" + role + ")", NamedTextColor.AQUA));
+            
+            if (war.getAttacker().equals(playerCity)) {
+                if (!war.getAttackerAllies().isEmpty()) {
+                    String allies = war.getAttackerAllies().stream()
+                        .map(City::getName)
+                        .reduce("", (a, b) -> a.isEmpty() ? b : a + ", " + b);
+                    player.sendMessage(Component.text("  Allies: " + allies, NamedTextColor.GREEN));
+                }
+            } else {
+                if (!war.getDefenderAllies().isEmpty()) {
+                    String allies = war.getDefenderAllies().stream()
+                        .map(City::getName)
+                        .reduce("", (a, b) -> a.isEmpty() ? b : a + ", " + b);
+                    player.sendMessage(Component.text("  Allies: " + allies, NamedTextColor.GREEN));
+                }
+            }
+            
+            player.sendMessage(Component.text("  Score: " + war.getAttackerScore() + " - " + war.getDefenderScore(), NamedTextColor.YELLOW));
+        }
+        
+        return 1;
     }
+    
     public static int warEnemiesCommandExecute(CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
-        player.sendMessage(Component.text("[WIP] Use this to view all enemies/defender allies.", NamedTextColor.YELLOW));
-        return 0;
+        if (City.playerCityHashMap.get(player) == null) {
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>", NamedTextColor.RED));
+            return 0;
+        }
+        
+        City playerCity = City.getCityByPlayer(player);
+        if (playerCity.getWars().isEmpty()) {
+            player.sendMessage(Component.text("Your city is not currently involved in any wars.", NamedTextColor.YELLOW));
+            return 0;
+        }
+        
+        new EnemyGui(player, Component.text("Enemies of " + playerCity.getName()));
+        return 1;
     }
 }
