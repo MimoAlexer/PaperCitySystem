@@ -3,6 +3,8 @@ package com.mimo.wargui;
 import com.mimo.City;
 import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -26,11 +28,11 @@ public class CityWarGui extends AbstractInventoryGui {
         for (War war : city.getWars()) {
             ItemStack item = new ItemStack(Material.SHIELD);
             ItemMeta meta = item.getItemMeta();
-            meta.displayName(Component.text("War vs: " + war.getDefender().getName(), net.kyori.adventure.text.format.NamedTextColor.RED));
+            meta.displayName(Component.text("War vs: " + war.getDefender().getName(), NamedTextColor.RED));
             meta.lore(List.of(
-                Component.text("Type: " + war.getWarType().name(), net.kyori.adventure.text.format.NamedTextColor.AQUA),
-                Component.text("Score: " + war.getAttackerScore() + " - " + war.getDefenderScore(), net.kyori.adventure.text.format.NamedTextColor.YELLOW),
-                Component.text("Click to manage allies/enemies", net.kyori.adventure.text.format.NamedTextColor.GREEN)
+                Component.text("Type: " + war.getWarType().name(), NamedTextColor.AQUA),
+                Component.text("Score: " + war.getAttackerScore() + " - " + war.getDefenderScore(), NamedTextColor.YELLOW),
+                Component.text("Click to manage allies/enemies", NamedTextColor.GREEN)
             ));
             item.setItemMeta(meta);
             results.add(item);

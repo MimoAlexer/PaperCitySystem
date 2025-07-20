@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.kyori.adventure.text.Component;
@@ -88,9 +89,18 @@ public class CitySystem extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        City.notifyOwnerOnLogin(player);
+        War.notifyOwnerOnLogin(player);
+    }
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        // Never actually removed this comment above
+        // Its very important to me
         getLogger().info("CitySystem has been disabled!");
     }
 }

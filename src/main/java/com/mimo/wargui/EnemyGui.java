@@ -4,6 +4,7 @@ import com.mimo.City;
 import com.mimo.War;
 import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -28,8 +29,8 @@ public class EnemyGui extends AbstractInventoryGui {
         for (City enemy : war.getDefenderAllies()) {
             ItemStack item = new ItemStack(Material.PAPER);
             ItemMeta meta = item.getItemMeta();
-            meta.displayName(Component.text("Enemy: " + enemy.getName(), net.kyori.adventure.text.format.NamedTextColor.RED));
-            meta.lore(List.of(Component.text("Click for info", net.kyori.adventure.text.format.NamedTextColor.GRAY)));
+            meta.displayName(Component.text("Enemy: " + enemy.getName(), NamedTextColor.RED));
+            meta.lore(List.of(Component.text("Click for info", NamedTextColor.GRAY)));
             item.setItemMeta(meta);
             results.add(item);
         }

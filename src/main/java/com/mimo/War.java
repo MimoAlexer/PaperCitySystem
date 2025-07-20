@@ -9,11 +9,17 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 public class War {
@@ -22,10 +28,24 @@ public class War {
     City defender;
     ArrayList<City> attackerAllies = new ArrayList<>();
     ArrayList<City> defenderAllies = new ArrayList<>();
-    private final java.util.HashSet<City> pendingAllyInvites = new java.util.HashSet<>();
+    private final HashSet<City> pendingAllyInvites = new HashSet<>();
     WarTypes warType;
     int attackerScore = 0;
     int defenderScore = 0;
+
+    // Store pending ally invites for offline owners
+    private static final Set<PendingAllyInvite> staticPendingAllyInvites = new HashSet<>();
+
+    private static class PendingAllyInvite {
+        public final City inviter;
+        public final City invitee;
+        public final War war;
+        public PendingAllyInvite(City inviter, City invitee, War war) {
+            this.inviter = inviter;
+            this.invitee = invitee;
+            this.war = war;
+        }
+    }
 
     public War(City attacker, City defender, WarTypes warType) {
         this.attacker = attacker;
@@ -47,8 +67,22 @@ public class War {
         }
     }
 
-    public java.util.HashSet<City> getPendingAllyInvites() {
+    public HashSet<City> getPendingAllyInvites() {
         return pendingAllyInvites;
+    }
+
+    public static void notifyOwnerOnLogin(Player owner) {
+        staticPendingAllyInvites.removeIf(req -> {
+            if (req.invitee.getOwner().equals(owner)) {
+                Component allyMsg = Component.text(req.inviter.getName() + " wants to ally with your city in their war against " + req.war.getDefender().getName() + "! ", NamedTextColor.AQUA)
+                    .append(Component.text("[Review]", NamedTextColor.GREEN)
+                        .hoverEvent(HoverEvent.showText(Component.text("Click to review ally invitation", NamedTextColor.YELLOW)))
+                        .clickEvent(ClickEvent.runCommand("/city war reviewally " + req.inviter.getName() + " " + req.invitee.getName() + " " + req.war.getAttacker().getName() + " " + req.war.getDefender().getName())));
+                owner.sendMessage(allyMsg);
+                return true;
+            }
+            return false;
+        });
     }
 
     @SuppressWarnings("unlikely-arg-type")
@@ -129,24 +163,129 @@ public class War {
         return 0;
     }
 
-    public static int warInviteAllyCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+    public static int warInviteAllyCommandExecute(CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
-        player.sendMessage(Component.text("[WIP] Use this to invite an ally to your war.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
-        return 0;
+        if (City.playerCityHashMap.get(player) == null) {
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>", NamedTextColor.RED));
+            return 0;
+        }
+        
+        String targetCityName = ctx.getArgument("city", String.class);
+        City inviterCity = City.getCityByPlayer(player);
+        City inviteeCity = City.cityArrayList.stream().filter(c -> c.getName().equals(targetCityName)).findFirst().orElse(null);
+        
+        if (inviteeCity == null) {
+            player.sendMessage(Component.text("City " + targetCityName + " does not exist!", NamedTextColor.RED));
+            return 0;
+        }
+        
+        if (inviteeCity.equals(inviterCity)) {
+            player.sendMessage(Component.text("You cannot invite your own city!", NamedTextColor.RED));
+            return 0;
+        }
+        
+        // Find a war where the inviter is the attacker
+        War war = inviterCity.getWars().stream()
+            .filter(w -> w.getAttacker().equals(inviterCity))
+            .findFirst()
+            .orElse(null);
+            
+        if (war == null) {
+            player.sendMessage(Component.text("You need to be in a war as the attacker to invite allies!", NamedTextColor.RED));
+            return 0;
+        }
+        
+        if (war.getAttackerAllies().contains(inviteeCity)) {
+            player.sendMessage(Component.text(inviteeCity.getName() + " is already your ally in this war!", NamedTextColor.YELLOW));
+            return 0;
+        }
+        
+        Player owner = inviteeCity.getOwner();
+        if (owner.isOnline()) {
+            Component allyMsg = Component.text(inviterCity.getName() + " wants to ally with your city in their war against " + war.getDefender().getName() + "! ", NamedTextColor.AQUA)
+                .append(Component.text("[Review]", NamedTextColor.GREEN)
+                    .hoverEvent(HoverEvent.showText(Component.text("Click to review ally invitation", NamedTextColor.YELLOW)))
+                    .clickEvent(ClickEvent.runCommand("/city war reviewally " + inviterCity.getName() + " " + inviteeCity.getName() + " " + war.getAttacker().getName() + " " + war.getDefender().getName())));
+            owner.sendMessage(allyMsg);
+            player.sendMessage(Component.text("Ally invitation sent to " + inviteeCity.getName() + "!", NamedTextColor.GREEN));
+        } else {
+            staticPendingAllyInvites.add(new PendingAllyInvite(inviterCity, inviteeCity, war));
+            player.sendMessage(Component.text("The city owner is offline. They will be notified when they come online.", NamedTextColor.YELLOW));
+        }
+        
+        return 1;
+    }
+
+    public static int warReviewAllyCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        String inviterName = ctx.getArgument("inviter", String.class);
+        String inviteeName = ctx.getArgument("invitee", String.class);
+        String attackerName = ctx.getArgument("attacker", String.class);
+        String defenderName = ctx.getArgument("defender", String.class);
+        
+        Player owner = (Player) ctx.getSource().getExecutor();
+        City inviter = City.cityArrayList.stream().filter(c -> c.getName().equals(inviterName)).findFirst().orElse(null);
+        City invitee = City.cityArrayList.stream().filter(c -> c.getName().equals(inviteeName)).findFirst().orElse(null);
+        City attacker = City.cityArrayList.stream().filter(c -> c.getName().equals(attackerName)).findFirst().orElse(null);
+        City defender = City.cityArrayList.stream().filter(c -> c.getName().equals(defenderName)).findFirst().orElse(null);
+        
+        if (inviter == null || invitee == null || attacker == null || defender == null) {
+            owner.sendMessage(Component.text("Invalid ally invitation.", NamedTextColor.RED));
+            return 0;
+        }
+        
+        if (!invitee.getOwner().equals(owner)) {
+            owner.sendMessage(Component.text("This ally invitation is not for your city.", NamedTextColor.RED));
+            return 0;
+        }
+        
+        War war = attacker.getWars().stream()
+            .filter(w -> w.getAttacker().equals(attacker) && w.getDefender().equals(defender))
+            .findFirst()
+            .orElse(null);
+            
+        if (war == null) {
+            owner.sendMessage(Component.text("War not found.", NamedTextColor.RED));
+            return 0;
+        }
+        
+        new GenericConfirmationGui(owner, Component.text("Accept " + inviter.getName() + " as an ally in their war against " + defender.getName() + "?", NamedTextColor.AQUA)) {
+            @Override
+            public void onConfirm(InventoryClickEvent event) {
+                war.addAttackerAlly(invitee);
+                owner.sendMessage(Component.text("You accepted " + inviter.getName() + " as an ally!", NamedTextColor.GREEN));
+                Player inviterOwner = inviter.getOwner();
+                if (inviterOwner.isOnline()) {
+                    inviterOwner.sendMessage(Component.text(invitee.getName() + " accepted your ally invitation!", NamedTextColor.GREEN));
+                }
+                inventory.close();
+            }
+            
+            @Override
+            public void onCancel(InventoryClickEvent event) {
+                owner.sendMessage(Component.text("You declined " + inviter.getName() + "'s ally invitation.", NamedTextColor.YELLOW));
+                Player inviterOwner = inviter.getOwner();
+                if (inviterOwner.isOnline()) {
+                    inviterOwner.sendMessage(Component.text(invitee.getName() + " declined your ally invitation.", NamedTextColor.RED));
+                }
+                inventory.close();
+            }
+        };
+        
+        return 1;
     }
     public static int warRemoveAllyCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
-        player.sendMessage(Component.text("[WIP] Use this to remove an ally from your war.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("[WIP] Use this to remove an ally from your war.", NamedTextColor.YELLOW));
         return 0;
     }
     public static int warListCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
-        player.sendMessage(Component.text("[WIP] Use this to list all current wars.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("[WIP] Use this to list all current wars.", NamedTextColor.YELLOW));
         return 0;
     }
     public static int warEnemiesCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
-        player.sendMessage(Component.text("[WIP] Use this to view all enemies/defender allies.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("[WIP] Use this to view all enemies/defender allies.", NamedTextColor.YELLOW));
         return 0;
     }
 }

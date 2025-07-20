@@ -4,6 +4,7 @@ import com.mimo.City;
 import com.mimo.War;
 import com.mimo.api.gui.AbstractInventoryGui;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import org.bukkit.Material;
@@ -37,8 +38,8 @@ public class AlliesGui extends AbstractInventoryGui {
         for (City ally : war.getAttackerAllies()) {
             ItemStack item = new ItemStack(Material.PAPER);
             ItemMeta meta = item.getItemMeta();
-            meta.displayName(Component.text("Ally: " + ally.getName(), net.kyori.adventure.text.format.NamedTextColor.GREEN));
-            meta.lore(List.of(Component.text("Click to remove ally", net.kyori.adventure.text.format.NamedTextColor.RED)));
+            meta.displayName(Component.text("Ally: " + ally.getName(), NamedTextColor.GREEN));
+            meta.lore(List.of(Component.text("Click to remove ally", NamedTextColor.RED)));
             item.setItemMeta(meta);
             results.add(item);
         }
@@ -46,8 +47,8 @@ public class AlliesGui extends AbstractInventoryGui {
         for (City pending : pendingInvites) {
             ItemStack item = new ItemStack(Material.MAP);
             ItemMeta meta = item.getItemMeta();
-            meta.displayName(Component.text("Pending: " + pending.getName(), net.kyori.adventure.text.format.NamedTextColor.YELLOW));
-            meta.lore(List.of(Component.text("Invitation sent", net.kyori.adventure.text.format.NamedTextColor.GRAY)));
+            meta.displayName(Component.text("Pending: " + pending.getName(), NamedTextColor.YELLOW));
+            meta.lore(List.of(Component.text("Invitation sent", NamedTextColor.GRAY)));
             item.setItemMeta(meta);
             results.add(item);
         }
@@ -63,7 +64,7 @@ public class AlliesGui extends AbstractInventoryGui {
         // this is kinda Schizophrenic XD
         // But the car line is from the last of us
         // (kinda)
-        meta.displayName(Component.text("Invite new ally", net.kyori.adventure.text.format.NamedTextColor.AQUA));
+        meta.displayName(Component.text("Invite new ally", NamedTextColor.AQUA));
         invite.setItemMeta(meta);
         results.add(invite);
         return results.toArray(new ItemStack[0]);
@@ -83,11 +84,11 @@ public class AlliesGui extends AbstractInventoryGui {
             City toRemove = City.cityArrayList.stream().filter(c -> c.getName().equals(name)).findFirst().orElse(null);
             if (toRemove != null) {
                 war.getAttackerAllies().remove(toRemove);
-                player.sendMessage(Component.text("Removed ally: " + name, net.kyori.adventure.text.format.NamedTextColor.RED));
+                player.sendMessage(Component.text("Removed ally: " + name, NamedTextColor.RED));
                 new AlliesGui(player, Component.text("Allies of " + war.getAttacker().getName())).show();
             }
-        } else if (clicked.getType() == Material.EMERALD) {
-            player.sendMessage(Component.text("Use /city war inviteally <city> to invite a new ally.", net.kyori.adventure.text.format.NamedTextColor.YELLOW));
+        } else if (clicked.getType() == Material.EMERALD) { // TODO: Add invite command
+            player.sendMessage(Component.text("Use /city war inviteally <city> to invite a new ally.", NamedTextColor.YELLOW));
         }
     }
 
