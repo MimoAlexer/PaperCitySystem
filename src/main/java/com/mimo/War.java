@@ -12,7 +12,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -273,17 +272,17 @@ public class War {
         
         return 1;
     }
-    public static int warRemoveAllyCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+    public static int warRemoveAllyCommandExecute(CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
         player.sendMessage(Component.text("[WIP] Use this to remove an ally from your war.", NamedTextColor.YELLOW));
         return 0;
     }
-    public static int warListCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+    public static int warListCommandExecute(CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
         player.sendMessage(Component.text("[WIP] Use this to list all current wars.", NamedTextColor.YELLOW));
         return 0;
     }
-    public static int warEnemiesCommandExecute(com.mojang.brigadier.context.CommandContext<io.papermc.paper.command.brigadier.CommandSourceStack> ctx) {
+    public static int warEnemiesCommandExecute(CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getExecutor();
         player.sendMessage(Component.text("[WIP] Use this to view all enemies/defender allies.", NamedTextColor.YELLOW));
         return 0;
