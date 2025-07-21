@@ -20,8 +20,11 @@ public class CityMainGui extends AbstractInventoryGui {
         head.getItemMeta().displayName(Component.text("Players"));
         ItemStack claim = new ItemStack(Material.BLACK_BANNER);
         claim.getItemMeta().displayName(Component.text("Claim"));
+        ItemStack laws = new ItemStack(Material.BOOK);
+        laws.getItemMeta().displayName(Component.text("City Laws"));
         addItem(1, 2, head);
         addItem(3, 2, claim);
+        addItem(5, 2, laws);
         for (int i = 0; i < 9; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
             addItem(i, 5, Material.GRAY_STAINED_GLASS_PANE);
@@ -36,6 +39,7 @@ public class CityMainGui extends AbstractInventoryGui {
         if (isItemStackClicked(Material.BARRIER, event)) event.getWhoClicked().closeInventory();
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) new CityPlayerGui(player).show();
         if (isItemStackClicked(Material.BLACK_BANNER, event)) new CityClaimGui(player).show();
+        if (isItemStackClicked(Material.BOOK, event)) new CityLawGui(player).show();
     }
 
     @Override
