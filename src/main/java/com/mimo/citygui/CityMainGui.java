@@ -73,6 +73,11 @@ public class CityMainGui extends AbstractInventoryGui {
             player.sendMessage(Component.text("Application submitted!", net.kyori.adventure.text.format.NamedTextColor.GREEN));
             player.closeInventory();
         }
+        // Banner edit logic
+        City city = City.getCityByPlayer(player);
+        if (isItemStackClicked(city.getBanner().getType(), event) && city.getOwner().equals(player)) {
+            new BannerEditGui(player, city).show();
+        }
     }
 
     @Override
