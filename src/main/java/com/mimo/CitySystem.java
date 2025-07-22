@@ -98,6 +98,7 @@ public class CitySystem extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        // Add Serialzing and stuff
         // Plugin shutdown logic
         // Never actually removed this comment above
         // Its very important to me

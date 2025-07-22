@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 
 public class CityMainGui extends AbstractInventoryGui {
     public CityMainGui(Player player) {
@@ -16,6 +17,16 @@ public class CityMainGui extends AbstractInventoryGui {
 
     @Override
     protected ItemStack[] items() {
+        City city = City.getCityByPlayer(player);
+        // Display the city's banner in the center top (slot 4,0)
+        ItemStack banner = city.getBanner();
+        if (banner != null) {
+            ItemStack bannerCopy = banner.clone();
+            BannerMeta meta = (BannerMeta) bannerCopy.getItemMeta();
+            meta.displayName(Component.text("City Banner"));
+            bannerCopy.setItemMeta(meta);
+            addItem(4, 0, bannerCopy);
+        }
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         head.getItemMeta().displayName(Component.text("Players"));
         ItemStack claim = new ItemStack(Material.BLACK_BANNER);

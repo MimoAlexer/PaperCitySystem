@@ -82,6 +82,7 @@ public class CommandManager {
                                                         )
                                                 )
                                         )
+                                        
                                 // Allies and stuff fully implemented
                         )
                         .executes(City::cityCommandExecute).build(), "Manage Cities", List.of("c")

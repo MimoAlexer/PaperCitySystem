@@ -25,6 +25,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.HashSet;
 import java.util.Set;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
+import org.bukkit.inventory.meta.BannerMeta;
 
 @Getter
 public class City {
@@ -44,6 +47,8 @@ public class City {
     private final TreasureChamber treasureChamber;
     @Setter
     private int exp = 0;
+    @Setter
+    private ItemStack banner; // City's banner/emblem
 
     // Store pending join requests for offline owners
     private static final Set<PendingJoinRequest> pendingJoinRequests = new HashSet<>();
@@ -70,6 +75,9 @@ public class City {
         permissions.setHasClaimPermission(true);
         playerPermissionsHashMap.put(owner, permissions);
         this.treasureChamber = new TreasureChamber();
+        // Default banner: white banner, no patterns
+        ItemStack defaultBanner = new ItemStack(Material.WHITE_BANNER);
+        this.banner = defaultBanner;
     }
 
     public void addPlayer(Player player) {
@@ -105,6 +113,12 @@ public class City {
         if (exp >= 1000) return CityTypes.VILLAGE;
         if (exp >= 500) return CityTypes.HAMLET;
         return CityTypes.SETTLEMENT;
+    }
+
+    public void setBanner(ItemStack banner) {
+        if (banner != null && banner.getType().name().endsWith("BANNER")) {
+            this.banner = banner;
+        }
     }
 
     public static int cityCommandExecute(CommandContext<CommandSourceStack> ctx) {
