@@ -25,13 +25,6 @@ public class CommandManager {
                                         .executes(City::cityClaimCommandExecute)
                         )
                         .then(
-                                Commands.literal("join")
-                                        .then(Commands.argument("name", StringArgumentType.word())
-                                                .suggests(City::cityJoinCommandSuggest)
-                                                .executes(City::cityJoinCommandExecute)
-                                        )
-                        )
-                        .then(
                                 Commands.literal("war")
                                         .executes(War::cityWarCommandExecute)
                                         .then(

@@ -36,6 +36,18 @@ public class CityMainGui extends AbstractInventoryGui {
         addItem(1, 2, head);
         addItem(3, 2, claim);
         addItem(5, 2, laws);
+        // Application/Review button logic
+        if (city.getOwner().equals(player)) {
+            // Owner: show review applications button
+            ItemStack review = new ItemStack(Material.PAPER);
+            review.getItemMeta().displayName(Component.text("Review Applications"));
+            addItem(7, 2, review);
+        } else if (!city.getPlayers().contains(player)) {
+            // Not a member: show apply button
+            ItemStack apply = new ItemStack(Material.WRITABLE_BOOK);
+            apply.getItemMeta().displayName(Component.text("Apply to Join"));
+            addItem(7, 2, apply);
+        }
         for (int i = 0; i < 9; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
             addItem(i, 5, Material.GRAY_STAINED_GLASS_PANE);
@@ -51,6 +63,16 @@ public class CityMainGui extends AbstractInventoryGui {
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) new CityPlayerGui(player).show();
         if (isItemStackClicked(Material.BLACK_BANNER, event)) new CityClaimGui(player).show();
         if (isItemStackClicked(Material.BOOK, event)) new CityLawGui(player).show();
+        // Application/Review button logic
+        if (isItemStackClicked(Material.PAPER, event)) {
+            new CityApplicationGui(player).show();
+        }
+        if (isItemStackClicked(Material.WRITABLE_BOOK, event)) {
+            City city = City.getCityByPlayer(player);
+            city.addApplication(player);
+            player.sendMessage(Component.text("Application submitted!", net.kyori.adventure.text.format.NamedTextColor.GREEN));
+            player.closeInventory();
+        }
     }
 
     @Override
