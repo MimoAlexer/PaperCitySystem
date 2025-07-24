@@ -63,7 +63,6 @@ public class CityApplicationGui extends AbstractInventoryGui {
 
     @Override
     public void clickCallback(InventoryClickEvent event) {
-        event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null) return;

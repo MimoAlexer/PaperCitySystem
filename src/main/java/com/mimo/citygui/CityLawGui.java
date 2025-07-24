@@ -47,7 +47,6 @@ public class CityLawGui extends AbstractInventoryGui {
 
     @Override
     public void clickCallback(InventoryClickEvent event) {
-        event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) {
             event.getWhoClicked().closeInventory();
             return;

@@ -166,6 +166,32 @@ public class City {
         return 0;
     }
 
+    public static int cityRenameCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        if (!(ctx.getSource().getExecutor() instanceof Player player)) {
+            ctx.getSource().getExecutor().sendMessage(Component.text("This command can only be executed by a player!", NamedTextColor.RED));
+            return 0;
+        }
+        City city = City.getCityByPlayer(player);
+        if (city == null) {
+            player.sendMessage(Component.text("You are not in a city!", NamedTextColor.RED));
+            return 0;
+        }
+        if (!city.getOwner().equals(player)) {
+            player.sendMessage(Component.text("Only the city owner can rename the city!", NamedTextColor.RED));
+            return 0;
+        }
+        String newName = ctx.getArgument("newname", String.class);
+        for (City c : cityArrayList) {
+            if (c.getName().equalsIgnoreCase(newName)) {
+                player.sendMessage(Component.text("A city with that name already exists!", NamedTextColor.RED));
+                return 0;
+            }
+        }
+        String oldName = city.getName();
+        city.setName(newName);
+        player.sendMessage(Component.text("City renamed from " + oldName + " to " + newName + "!", NamedTextColor.GREEN));
+        return 1;
+    }
 
     public static CompletableFuture<Suggestions> cityJoinCommandSuggest(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
         ArrayList<String> actions = new ArrayList<>();

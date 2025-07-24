@@ -75,8 +75,13 @@ public class CommandManager {
                                                         )
                                                 )
                                         )
-                                        
                                 // Allies and stuff fully implemented
+                        )
+                        .then(
+                                Commands.literal("rename")
+                                        .then(Commands.argument("newname", StringArgumentType.word())
+                                                .executes(City::cityRenameCommandExecute)
+                                        )
                         )
                         .executes(City::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );

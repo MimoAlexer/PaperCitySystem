@@ -45,7 +45,6 @@ public class BannerEditGui extends AbstractInventoryGui {
 
     @Override
     public void clickCallback(InventoryClickEvent event) {
-        event.setCancelled(true);
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null) return;
         Material type = clicked.getType();

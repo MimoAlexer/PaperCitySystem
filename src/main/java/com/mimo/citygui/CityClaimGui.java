@@ -102,8 +102,6 @@ public class CityClaimGui extends AbstractInventoryGui {
 
     @Override
     public void clickCallback(InventoryClickEvent event) {
-        event.setCancelled(true);
-
         if (isItemStackClicked(Material.BARRIER, event)) {
             new CityMainGui(player).show();
             return;
