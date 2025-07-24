@@ -28,6 +28,8 @@ public class CityPlayerGui extends AbstractInventoryGui {
         }
         addItem(8, 5, new ItemStack(Material.BARRIER).getType());
         List<Player> members = City.getCityByPlayer(player).getPlayers();
+        City city = City.getCityByPlayer(player);
+        boolean isOwner = city.getOwner().equals(player);
         for (int i = 0; i < members.size(); i++) {
             Player member = members.get(i);
             int x = i + 1;
@@ -36,6 +38,14 @@ public class CityPlayerGui extends AbstractInventoryGui {
             ItemStack head = PlayerHeads.fromUuid(member.getUniqueId());
             itemStackPlayerHashMap.put(head, member);
             addItem(col, row, head);
+            if (isOwner && !member.equals(player)) {
+                ItemStack kick = new ItemStack(Material.BARRIER);
+                var meta = kick.getItemMeta();
+                meta.displayName(Component.text("Kick", net.kyori.adventure.text.format.NamedTextColor.RED));
+                kick.setItemMeta(meta);
+                addItem(col + 1, row, kick);
+                itemStackPlayerHashMap.put(kick, member);
+            }
         }
         return new ItemStack[0];
     }
@@ -49,6 +59,25 @@ public class CityPlayerGui extends AbstractInventoryGui {
                     player,
                     itemStackPlayerHashMap.get(event.getCurrentItem())
             ).show();
+        }
+        if (isItemStackClicked(Material.BARRIER, event)) {
+            Player toKick = itemStackPlayerHashMap.get(event.getCurrentItem());
+            City city = City.getCityByPlayer(player);
+            if (city != null && city.getOwner().equals(player) && toKick != null && !toKick.equals(player)) {
+                new com.mimo.api.gui.GenericConfirmationGui(player, Component.text("Kick " + toKick.getName() + " from the city?", net.kyori.adventure.text.format.NamedTextColor.RED)) {
+                    @Override
+                    public void onConfirm(org.bukkit.event.inventory.InventoryClickEvent e) {
+                        city.removePlayer(toKick);
+                        player.sendMessage(Component.text("Kicked " + toKick.getName() + " from the city!", net.kyori.adventure.text.format.NamedTextColor.GREEN));
+                        toKick.sendMessage(Component.text("You have been kicked from " + city.getName() + "!", net.kyori.adventure.text.format.NamedTextColor.RED));
+                        new CityPlayerInfoGui(player, toKick).show();
+                    }
+                    @Override
+                    public void onCancel(org.bukkit.event.inventory.InventoryClickEvent e) {
+                        new CityPlayerGui(player).show();
+                    }
+                };
+            }
         }
     }
 

@@ -83,6 +83,10 @@ public class CommandManager {
                                                 .executes(City::cityRenameCommandExecute)
                                         )
                         )
+                        .then(
+                                Commands.literal("leave")
+                                        .executes(City::cityLeaveCommandExecute)
+                        )
                         .executes(City::cityCommandExecute).build(), "Manage Cities", List.of("c")
         );
     }

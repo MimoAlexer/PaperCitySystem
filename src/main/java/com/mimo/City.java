@@ -131,7 +131,6 @@ public class City {
             new CityMainGui((Player) ctx.getSource().getExecutor()).show();
             return 1;
         }
-        // unreachable
     }
 
     public static int cityClaimCommandExecute(CommandContext<CommandSourceStack> ctx) {
@@ -142,7 +141,6 @@ public class City {
             new CityClaimGui((Player) ctx.getSource().getExecutor()).show();
             return 1;
         }
-        // unreachable
     }
 
     public static int cityCreateCommandExecute(CommandContext<CommandSourceStack> ctx) {
@@ -199,5 +197,25 @@ public class City {
         actions.forEach(builder::suggest);
         return builder.buildFuture();
     }
+
+    public static int cityLeaveCommandExecute(CommandContext<CommandSourceStack> ctx) {
+        if (!(ctx.getSource().getExecutor() instanceof Player player)) {
+            ctx.getSource().getExecutor().sendMessage(Component.text("This command can only be executed by a player!", NamedTextColor.RED));
+            return 0;
+        }
+        City city = City.getCityByPlayer(player);
+        if (city == null) {
+            player.sendMessage(Component.text("You are not in a city!", NamedTextColor.RED));
+            return 0;
+        }
+        if (city.getOwner().equals(player)) {
+            player.sendMessage(Component.text("The city owner cannot leave the city! Use /city disband to delete the city.", NamedTextColor.RED));
+            return 0;
+        }
+        city.removePlayer(player);
+        player.sendMessage(Component.text("You have left " + city.getName() + "!", NamedTextColor.YELLOW));
+        return 1;
+    }
 }
 // Uh ohhh 200 lines rule is broken <BS> XD
+// NOOOO TAHT FILE IS TO MASSIVE!!!!!
