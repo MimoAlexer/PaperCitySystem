@@ -11,13 +11,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
 public class CityMainGui extends AbstractInventoryGui {
+    private final City city;
+    private final boolean canEdit;
     public CityMainGui(Player player) {
-        super(player, Component.text(City.getCityByPlayer(player).getName()));
+        this(player, City.getCityByPlayer(player));
+    }
+    public CityMainGui(Player player, City city) {
+        super(player, Component.text(city.getName()));
+        this.city = city;
+        this.canEdit = city.getOwner().equals(player) || city.getPlayers().contains(player);
     }
 
     @Override
     protected ItemStack[] items() {
-        City city = City.getCityByPlayer(player);
+        // Use this.city instead of always looking up by 
+        // thats based...
+        City city = this.city;
         // Display the city's banner in the center top (slot 4,0)
         ItemStack banner = city.getBanner();
         if (banner != null) {
@@ -36,17 +45,21 @@ public class CityMainGui extends AbstractInventoryGui {
         addItem(1, 2, head);
         addItem(3, 2, claim);
         addItem(5, 2, laws);
-        // Application/Review button logic
-        if (city.getOwner().equals(player)) {
-            // Owner: show review applications button
-            ItemStack review = new ItemStack(Material.PAPER);
-            review.getItemMeta().displayName(Component.text("Review Applications"));
-            addItem(7, 2, review);
-        } else if (!city.getPlayers().contains(player)) {
-            // Not a member: show apply button
-            ItemStack apply = new ItemStack(Material.WRITABLE_BOOK);
-            apply.getItemMeta().displayName(Component.text("Apply to Join"));
-            addItem(7, 2, apply);
+        // Only show action buttons if canEdit
+        // small refactor here (please dont ask why)
+        // bs refactor
+        if (canEdit) {
+            if (city.getOwner().equals(player)) {
+                ItemStack review = new ItemStack(Material.PAPER);
+                review.getItemMeta().displayName(Component.text("Review Applications"));
+                addItem(7, 2, review);
+            } else if (!city.getPlayers().contains(player)) {
+                // Not a member: show apply button
+                // bs code here (Please please please dont ask why)
+                ItemStack apply = new ItemStack(Material.WRITABLE_BOOK);
+                apply.getItemMeta().displayName(Component.text("Apply to Join"));
+                addItem(7, 2, apply);
+            }
         }
         ItemStack leaderboard = new ItemStack(Material.GOLD_INGOT);
         leaderboard.getItemMeta().displayName(Component.text("Leaderboard"));
@@ -66,6 +79,7 @@ public class CityMainGui extends AbstractInventoryGui {
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) event.getWhoClicked().closeInventory();
+        if (!canEdit) return;
         if (isItemStackClicked(Material.PLAYER_HEAD, event)) new CityPlayerGui(player).show();
         if (isItemStackClicked(Material.BLACK_BANNER, event)) new CityClaimGui(player).show();
         if (isItemStackClicked(Material.BOOK, event)) new CityLawGui(player).show();
@@ -74,13 +88,11 @@ public class CityMainGui extends AbstractInventoryGui {
             new CityApplicationGui(player).show();
         }
         if (isItemStackClicked(Material.WRITABLE_BOOK, event)) {
-            City city = City.getCityByPlayer(player);
             city.addApplication(player);
             player.sendMessage(Component.text("Application submitted!", net.kyori.adventure.text.format.NamedTextColor.GREEN));
             player.closeInventory();
         }
         // Banner edit logic
-        City city = City.getCityByPlayer(player);
         if (isItemStackClicked(city.getBanner().getType(), event) && city.getOwner().equals(player)) {
             new BannerEditGui(player, city).show();
         }

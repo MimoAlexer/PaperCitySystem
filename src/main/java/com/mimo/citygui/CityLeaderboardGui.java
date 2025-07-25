@@ -13,8 +13,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.HashMap;
 
 public class CityLeaderboardGui extends AbstractInventoryGui {
+    private final HashMap<ItemStack, City> itemStackCityMap = new HashMap<>();
     public CityLeaderboardGui(Player player) {
         super(player, Component.text("City Leaderboard"));
     }
@@ -37,6 +39,7 @@ public class CityLeaderboardGui extends AbstractInventoryGui {
             ));
             paper.setItemMeta(meta);
             addItem(col, row, paper);
+            itemStackCityMap.put(paper, city);
             row++;
             rank++;
             if (row > 4) {
@@ -52,6 +55,12 @@ public class CityLeaderboardGui extends AbstractInventoryGui {
     public void clickCallback(InventoryClickEvent event) {
         event.setCancelled(true);
         if (isItemStackClicked(Material.BARRIER, event)) new CityMainGui(player).show();
+        ItemStack clicked = event.getCurrentItem();
+        if (clicked == null) return;
+        City city = itemStackCityMap.get(clicked);
+        if (city != null) {
+            new CityMainGui(player, city).show();
+        }
     }
 
     @Override
