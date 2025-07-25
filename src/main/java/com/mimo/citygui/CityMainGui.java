@@ -48,6 +48,9 @@ public class CityMainGui extends AbstractInventoryGui {
             apply.getItemMeta().displayName(Component.text("Apply to Join"));
             addItem(7, 2, apply);
         }
+        ItemStack leaderboard = new ItemStack(Material.GOLD_INGOT);
+        leaderboard.getItemMeta().displayName(Component.text("Leaderboard"));
+        addItem(7, 4, leaderboard);
         for (int i = 0; i < 9; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
             addItem(i, 5, Material.GRAY_STAINED_GLASS_PANE);
@@ -77,6 +80,9 @@ public class CityMainGui extends AbstractInventoryGui {
         City city = City.getCityByPlayer(player);
         if (isItemStackClicked(city.getBanner().getType(), event) && city.getOwner().equals(player)) {
             new BannerEditGui(player, city).show();
+        }
+        if (isItemStackClicked(Material.GOLD_INGOT, event)) {
+            new CityLeaderboardGui(player).show();
         }
     }
 
