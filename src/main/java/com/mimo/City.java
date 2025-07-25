@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.BannerMeta;
 import java.util.UUID;
+import java.time.Instant;
 
 @Getter
 public class City {
@@ -39,8 +40,32 @@ public class City {
     public static ArrayList<City> cityArrayList = new ArrayList<>();
     public static HashMap<Player, Permissions> playerPermissionsHashMap = new HashMap<>();
     private final List<Chunk> chunks = new ArrayList<>();
+    private final List<CityChange> changes = new ArrayList<>();
+    public static class CityChange {
+        // noooo poquo diooo la poliziaaaaaaa
+        public final Instant timestamp; // First time using an Instant (I read the wiki)
+        public final String type;
+        public final String description;
+        public final String actor;
+        public CityChange(String type, String description, String actor) {
+            this.timestamp = Instant.now();
+            this.type = type;
+            this.description = description;
+            this.actor = actor;
+        }
+    }
+    public void logChange(String type, String description, Player actor) {
+        changes.add(0, new CityChange(type, description, actor != null ? actor.getName() : null));
+        if (changes.size() > 50) changes.remove(changes.size() - 1); // keep only recent 50
+    }
+    // I LOVE LOMBOK!!!
     @Setter
     private String name;
+    public void setName(String name, Player actor) {
+        String old = this.name;
+        this.name = name;
+        logChange("rename", "City renamed from " + old + " to " + name, actor);
+    }
     @Setter
     private Player owner;
     private final CityTypes cityType = CityTypes.SETTLEMENT;
@@ -80,6 +105,7 @@ public class City {
         // Default banner: white banner, no patterns
         ItemStack defaultBanner = new ItemStack(Material.WHITE_BANNER);
         this.banner = defaultBanner;
+        logChange("create", "City created with name " + name, owner);
     }
 
     public void addPlayer(Player player) {
@@ -87,6 +113,7 @@ public class City {
             players.add(player);
             playerCityHashMap.put(player, this);
             playerPermissionsHashMap.put(player, new Permissions());
+            logChange("join", player.getName() + " joined the city", player);
         }
     }
 
@@ -98,6 +125,7 @@ public class City {
         if (players.contains(player)) {
             players.remove(player);
             playerCityHashMap.remove(player);
+            logChange("leave", player.getName() + " left or was kicked from the city", player);
         }
     }
 
@@ -117,9 +145,10 @@ public class City {
         return CityTypes.SETTLEMENT;
     }
 
-    public void setBanner(ItemStack banner) {
+    public void setBanner(ItemStack banner, Player actor) {
         if (banner != null && banner.getType().name().endsWith("BANNER")) {
             this.banner = banner;
+            logChange("banner", "City banner was updated", actor);
         }
     }
 
@@ -186,7 +215,7 @@ public class City {
             }
         }
         String oldName = city.getName();
-        city.setName(newName);
+        city.setName(newName, player);
         player.sendMessage(Component.text("City renamed from " + oldName + " to " + newName + "!", NamedTextColor.GREEN));
         return 1;
     }

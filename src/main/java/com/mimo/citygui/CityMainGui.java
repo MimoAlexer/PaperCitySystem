@@ -51,6 +51,9 @@ public class CityMainGui extends AbstractInventoryGui {
         ItemStack leaderboard = new ItemStack(Material.GOLD_INGOT);
         leaderboard.getItemMeta().displayName(Component.text("Leaderboard"));
         addItem(7, 4, leaderboard);
+        ItemStack changes = new ItemStack(Material.CLOCK);
+        changes.getItemMeta().displayName(Component.text("Recent Changes"));
+        addItem(6, 4, changes);
         for (int i = 0; i < 9; i++) {
             addItem(i, 0, Material.GRAY_STAINED_GLASS_PANE);
             addItem(i, 5, Material.GRAY_STAINED_GLASS_PANE);
@@ -83,6 +86,9 @@ public class CityMainGui extends AbstractInventoryGui {
         }
         if (isItemStackClicked(Material.GOLD_INGOT, event)) {
             new CityLeaderboardGui(player).show();
+        }
+        if (isItemStackClicked(Material.CLOCK, event)) {
+            new CityChangesGui(player).show();
         }
     }
 

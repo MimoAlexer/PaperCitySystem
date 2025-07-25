@@ -53,8 +53,10 @@ public class BannerEditGui extends AbstractInventoryGui {
             player.sendMessage(Component.text("Selected color: " + type.name().replace("_BANNER", ""), NamedTextColor.YELLOW));
             new BannerEditGui(player, city).show();
         } else if (type == Material.LIME_WOOL) {
+            // Confirm
+            // CONFIRM TAKE THE SHOT TAKE THE SHOT!!!
             ItemStack newBanner = new ItemStack(selectedColor);
-            city.setBanner(newBanner);
+            city.setBanner(newBanner, player);
             player.sendMessage(Component.text("City banner updated!", NamedTextColor.GREEN));
             new CityMainGui(player).show();
         } else if (type == Material.RED_WOOL) {

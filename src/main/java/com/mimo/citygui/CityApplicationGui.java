@@ -40,12 +40,14 @@ public class CityApplicationGui extends AbstractInventoryGui {
             itemStackApplicantMap.put(head, uuid);
             addItem(col, row, head);
             // Accept button
+            // bs code here (dont ask why)
             ItemStack accept = new ItemStack(Material.LIME_WOOL);
             ItemMeta acceptMeta = accept.getItemMeta();
             acceptMeta.displayName(Component.text("Accept", NamedTextColor.GREEN));
             accept.setItemMeta(acceptMeta);
             addItem(col + 1, row, accept);
             // Reject button
+            // bs code here too (please dont ASKKK WHYY)
             ItemStack reject = new ItemStack(Material.RED_WOOL);
             ItemMeta rejectMeta = reject.getItemMeta();
             rejectMeta.displayName(Component.text("Reject", NamedTextColor.RED));
@@ -67,6 +69,9 @@ public class CityApplicationGui extends AbstractInventoryGui {
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null) return;
         // Find which applicant this row is for
+        // You know????? I'm so proud that this project isnt done yet
+        // Because I'm SHIT AT CODING I WILL BE ALWAYS TRASH
+        // (David Goggins reference)
         for (ItemStack head : itemStackApplicantMap.keySet()) {
             UUID uuid = itemStackApplicantMap.get(head);
             Player applicant = Bukkit.getPlayer(uuid);
