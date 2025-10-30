@@ -153,23 +153,37 @@ public class City {
     }
 
     public static int cityCommandExecute(CommandContext<CommandSourceStack> ctx) {
-        if (ctx.getSource().getExecutor() instanceof Player player) {
-            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city, with /city join <name>", NamedTextColor.YELLOW));
+        Object executor = ctx.getSource().getExecutor();
+        if (!(executor instanceof Player player)) {
+            ctx.getSource().getExecutor().sendMessage(Component.text("This command can only be executed by a player!", NamedTextColor.RED));
             return 0;
-        } else {
-            new CityMainGui((Player) ctx.getSource().getExecutor()).show();
-            return 1;
         }
+
+        City city = City.getCityByPlayer(player);
+        if (city == null) {
+            player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>, or join an existing city with /city join <name>.", NamedTextColor.YELLOW));
+            return 0;
+        }
+
+        new CityMainGui(player).show();
+        return 1;
     }
 
     public static int cityClaimCommandExecute(CommandContext<CommandSourceStack> ctx) {
-        if (ctx.getSource().getExecutor() instanceof Player player) {
+        Object executor = ctx.getSource().getExecutor();
+        if (!(executor instanceof Player player)) {
+            ctx.getSource().getExecutor().sendMessage(Component.text("This command can only be executed by a player!", NamedTextColor.RED));
+            return 0;
+        }
+
+        City city = City.getCityByPlayer(player);
+        if (city == null) {
             player.sendMessage(Component.text("You are not in a city! Create one with /city create <name>.", NamedTextColor.YELLOW));
             return 0;
-        } else {
-            new CityClaimGui((Player) ctx.getSource().getExecutor()).show();
-            return 1;
         }
+
+        new CityClaimGui(player).show();
+        return 1;
     }
 
     public static int cityCreateCommandExecute(CommandContext<CommandSourceStack> ctx) {
